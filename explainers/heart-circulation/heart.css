@@ -1,0 +1,69 @@
+/* Styles specific to the heart and circulation explainer. */
+
+.drawing {
+  position: absolute;
+  inset: 3% 3%;
+  width: 94%;
+  height: 94%;
+  overflow: visible;
+}
+
+/* Labels keep a constant size on screen while the camera zooms:
+   scenes.js sets --z to the current zoom factor. */
+.drawing text {
+  fill: var(--text);
+  font-family: var(--sans);
+  font-size: calc(17px * var(--z, 1));
+}
+.drawing text.small { font-size: calc(13px * var(--z, 1)); fill: #c7ced6; }
+.drawing text.cap { fill: var(--muted); font-size: calc(15px * var(--z, 1)); }
+.drawing text.big { font-size: calc(22px * var(--z, 1)); }
+.drawing text.accent { fill: var(--accent); }
+.drawing text.ok { fill: var(--ok); }
+.drawing text.bad { fill: var(--bad); }
+.drawing .lead {
+  stroke: var(--muted);
+  stroke-width: 1;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+.drawing .frame {
+  fill: rgba(0, 0, 0, 0.16);
+  stroke: rgba(255, 255, 255, 0.12);
+  vector-effect: non-scaling-stroke;
+}
+.drawing .axis {
+  stroke: #9aa4af;
+  stroke-width: 1.2;
+  fill: none;
+}
+
+/* Parts named in hovered text glow */
+.drawing .is-lit { filter: url(#glow-lit); }
+
+/* ---------- Colour key ---------- */
+
+.legend {
+  position: absolute;
+  left: 4%;
+  bottom: 4%;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 92%;
+  gap: 0.4rem 1.2rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.legend span { display: none; align-items: center; gap: 0.45rem; }
+.legend span.on { display: flex; }
+.legend .sw { width: 14px; height: 14px; border-radius: 3px; }
+.sw-art { background: #c4473f; border-radius: 50% !important; }
+.sw-vein { background: #5f86b3; border-radius: 50% !important; }
+.sw-muscle { background: linear-gradient(180deg, #d4876a, #8f4a39); }
+.sw-valve { background: #e6dcb6; height: 4px !important; margin: 5px 0; }
+.sw-body { background: #39414a; border: 2px solid #6f7a86; }
+.sw-clot { background: #5a2326; border: 2px solid #ee6b6b; border-radius: 50% !important; }
+
+@media (max-width: 800px) {
+  .legend { bottom: 2.8rem; font-size: 0.7rem; gap: 0.3rem 0.8rem; }
+}

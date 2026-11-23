@@ -263,6 +263,31 @@ dfn[data-part]:hover, dfn[data-part]:focus {
 
 .note h3 { margin: 0 0 0.5rem; font-size: 1.15rem; }
 
+/* Further reading: links for readers who want more, Wikipedia first. */
+.reading { margin: 0 0 2.5rem; }
+.reading h3, .references h3 { margin: 0 0 0.6rem; font-size: 1.15rem; }
+.reading ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  columns: 2 16rem;
+  column-gap: 2rem;
+}
+.reading li { margin: 0 0 0.35rem; break-inside: avoid; }
+.reading .src { color: var(--muted); font-size: 0.8rem; margin-left: 0.35rem; }
+
+/* References: the citation block at the very bottom of each page. */
+.references {
+  border-top: 1px solid var(--rule);
+  padding-top: 1.5rem;
+  margin-top: 2.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.references ol { margin: 0; padding-left: 1.5rem; }
+.references li { margin-bottom: 0.45rem; }
+.references cite { font-style: italic; }
+
 /* ---------- Narrow screens ----------
    The drawing stays fixed in the top half. Text scrolls up from below and
    slides under the drawing, fading out at its lower edge, so the only text

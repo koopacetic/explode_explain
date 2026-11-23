@@ -36,6 +36,12 @@ this document.
   definition, an optional infobox (hidden on phones) and a `.scroll-cue`.
 - Notes that are not part of the scroll sequence (planned sections, caveats)
   go in `.after` below the steps, using `.note` boxes.
+- The `.after` area ends with two blocks, in this order: **Further reading**
+  (`.reading`, a list of links, Wikipedia articles first, each tagged with its
+  source in a `.src` span) and, at the very bottom of the page, **References**
+  (`.references`, a numbered list of the sources behind the page's facts and
+  figures, in Vancouver style: authors, title, `<cite>`journal or book`</cite>`,
+  year, volume and pages). Check that every Wikipedia title exists.
 
 ## 3. Colour
 
@@ -177,4 +183,5 @@ sentence, and tags (subject type, number of steps).
 - [ ] Defined terms use `<dfn>`, with `data-part` where they name a drawn part.
 - [ ] Narrow-screen camera keyframes checked at 400 px wide.
 - [ ] `hero.js` and a gallery card added.
+- [ ] Further reading (Wikipedia first) and a references block at the bottom.
 - [ ] Checked frozen frames with `#t=<value>` at the start, middle and end of each step.

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The heart and circulation</title>
+  <meta name="description" content="How much blood the heart moves, why the brain has its own supply, why blood from the feet needs help to return, and why sitting still for hours is a risk, explained step by step with diagrams.">
+  <link rel="stylesheet" href="../../shared/explainer.css">
+  <link rel="stylesheet" href="heart.css">
+</head>
+<body>
+  <div class="progress"></div>
+  <nav class="topbar"><a href="../../index.html">&larr; All explainers</a></nav>
+
+  <main class="explainer">
+
+    <!-- ===== Stage: one SVG, built in scenes.js ===== -->
+    <div class="stage" aria-hidden="true">
+      <svg class="drawing" id="drawing" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid meet"></svg>
+
+      <!-- Colour key; each entry lists the steps where it applies -->
+      <div class="legend" id="legend">
+        <span data-steps="0-3,7,9-12,16-19"><i class="sw sw-art"></i>Oxygen-rich blood</span>
+        <span data-steps="0-3,7,9-19"><i class="sw sw-vein"></i>Oxygen-poor blood</span>
+        <span data-steps="1-2,8,13-16,18"><i class="sw sw-muscle"></i>Muscle (moves)</span>
+        <span data-steps="1-2,13-15"><i class="sw sw-valve"></i>Valve</span>
+        <span data-steps="0,3,9-12,16-19"><i class="sw sw-body"></i>Body (fixed)</span>
+        <span data-steps="17"><i class="sw sw-clot"></i>Clot</span>
+      </div>
+    </div>
+
+    <!-- ===== Text: one <section data-step> per scene ===== -->
+    <div class="steps">
+
+      <section data-step class="step hero">
+        <h1>The heart and circulation</h1>
+        <p>The <dfn data-part="heart">heart</dfn> is a muscular pump that drives blood around the body through a closed network of vessels, the <dfn>circulatory system</dfn>. In an adult at rest it moves about five litres of blood a minute, roughly the body's entire blood volume.</p>
+        <p>This page follows that flow: how much the heart moves, why the brain is supplied first and most steadily, why blood returning from the feet needs help, and why sitting still for hours is a risk.</p>
+        <table class="infobox">
+          <tr><th>System</th><td>Cardiovascular (heart, blood vessels, blood)</td></tr>
+          <tr><th>Output at rest</th><td>About 5 litres per minute</td></tr>
+          <tr><th>Heart rate at rest</th><td>Typically 60&ndash;100 beats per minute</td></tr>
+          <tr><th>Blood volume</th><td>About 5 litres in an adult</td></tr>
+          <tr><th>Circulation described</th><td>William Harvey, 1628</td></tr>
+          <tr><th>Related</th><td>Lungs, blood pressure, fainting, thrombosis</td></tr>
+        </table>
+        <div class="scroll-cue">Scroll to follow the blood<span class="chevron"></span></div>
+      </section>
+
+      <section data-step class="step">
+        <h2>Two pumps in one</h2>
+        <p>The heart has four chambers. On each side, a thin-walled <dfn data-part="atrium">atrium</dfn> collects returning blood and passes it to a thick-walled <dfn data-part="ventricle">ventricle</dfn>, which contracts and pushes it out.</p>
+        <p><dfn data-part="valve">Valves</dfn> at the entrance and exit of each ventricle let blood pass in one direction only. They are pushed open by forward flow and shut by backward flow.</p>
+        <p>With each beat, each ventricle pushes out about 70 millilitres. This is the <dfn data-part="cup">stroke volume</dfn>.</p>
+        <p class="caption">Schematic front view. As in medical diagrams, the right side of the heart is drawn on the left.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Flow volume</h2>
+        <p>The volume pumped per minute is the <dfn>cardiac output</dfn>: stroke volume times heart rate. At rest, 70&nbsp;mL &times; 70 beats gives about 4.9 litres a minute.</p>
+        <p>An adult has about five litres of blood, so the whole volume passes through the heart roughly once a minute. Over a day this adds up to about 7,000 litres and 100,000 beats.</p>
+        <p>During hard exercise both numbers rise. A fit young adult can reach about 20 litres a minute; trained endurance athletes reach more than 30.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Two circuits in series</h2>
+        <p>The right side of the heart pumps blood through the lungs, where it takes up oxygen. This is the <dfn data-part="pulm">pulmonary circuit</dfn>. The blood returns to the left side, which pumps it through the rest of the body: the <dfn data-part="sys">systemic circuit</dfn>. From the body it returns to the right side.</p>
+        <p>Because the two circuits are joined end to end, both sides must pump the same volume per minute. If one side pumped more, blood would collect in the other circuit.</p>
+        <p class="caption">Oxygen-rich blood is drawn red and oxygen-poor blood blue, by convention. Real blood is red in both, darker when it carries less oxygen.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Fast in the pipes, slow where it counts</h2>
+        <p>Blood leaves the heart through the <dfn>aorta</dfn>, which divides into <dfn>arteries</dfn>, then into narrow <dfn>arterioles</dfn>, and finally into <dfn data-part="cap">capillaries</dfn>: tubes about as wide as one red blood cell, numbering in the billions. They join again into <dfn>venules</dfn> and <dfn>veins</dfn>.</p>
+        <p>Each vessel is narrow, but together the capillaries have a cross-section roughly a thousand times that of the aorta. The same volume passes every level each second, about 83&nbsp;mL, so the blood slows down in proportion: from about 30&nbsp;cm per second in the aorta to about 0.3&nbsp;mm per second in a capillary.</p>
+        <p>The slow passage gives time for oxygen, nutrients and waste to cross the capillaries' thin walls.</p>
+        <p class="caption">The drawing shows 16 capillaries, and the graph is not to scale.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Pressure falls along the way</h2>
+        <p>Each beat raises the pressure in the large arteries to about 120&nbsp;mmHg, and between beats it falls to about 80. This is the familiar blood pressure of <q>120 over 80</q>.</p>
+        <p>The arterioles offer the most resistance, and most of the pressure is lost there. The pulsing also fades out. In the capillaries the pressure is about 35&nbsp;mmHg at the start and 15 at the end; in the large veins it is below 10, and close to zero where they enter the heart.</p>
+        <p>By the time blood reaches the veins, the push from the heart is almost spent. This matters for the return from the legs.</p>
+        <p class="caption">Values for a person lying down.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Where the flow goes</h2>
+        <p>At rest, the five litres a minute are shared out roughly as shown. The kidneys, liver and gut receive large shares because they filter and process the blood itself.</p>
+        <p>The <dfn data-part="brain">brain</dfn> is about 2% of body weight but receives about 15% of the flow and uses about 20% of the oxygen. During exercise, the share going to muscles can rise to more than three quarters, while the brain's supply stays almost the same.</p>
+        <p class="caption">Approximate figures for a resting adult; sources differ by a few per cent.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>The head's own branches</h2>
+        <p>The aorta rises from the heart and curves over as the <dfn data-part="arch">aortic arch</dfn>. Its first branches, the <dfn data-part="coronary">coronary arteries</dfn>, feed the heart muscle itself. Then three branches leave the top of the arch, heading up.</p>
+        <p>Two <dfn data-part="carotid">carotid arteries</dfn> and two <dfn data-part="vertebral">vertebral arteries</dfn> carry blood to the brain. They take the shortest route from the heart, at full pressure, before the rest of the body draws its share.</p>
+        <p>Inside the skull the four arteries join in a ring, the <dfn data-part="willis">circle of Willis</dfn>. If one inlet is blocked, blood can reach its area round the ring. The ring is complete in fewer than half of people, so this protection varies.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Kept steady</h2>
+        <p>The brain stores almost no oxygen or glucose. Without blood flow, a person loses consciousness within about ten seconds, and brain cells begin to die after a few minutes.</p>
+        <p>The brain's arterioles therefore adjust themselves: they widen when pressure falls and narrow when it rises. This <dfn data-part="auto">cerebral autoregulation</dfn> keeps flow close to 750&nbsp;mL a minute across a range of mean pressures of about 60 to 150&nbsp;mmHg.</p>
+        <p>When pressure falls further, the body narrows the vessels to the skin, gut and kidneys, so that more of the remaining flow goes to the brain.</p>
+        <p class="caption">The width of the plateau varies between people and between studies.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Gravity</h2>
+        <p>Blood has weight. In a column of blood, pressure rises by about 0.78&nbsp;mmHg for each centimetre further down.</p>
+        <p>Lying down, the head, heart and feet are at about the same height and share the same pressure. Standing up, the brain is about 40&nbsp;cm above the heart, so the pressure there is about 30&nbsp;mmHg lower. The feet are about 125&nbsp;cm below the heart, and the pressure in their arteries is about 100&nbsp;mmHg higher.</p>
+        <p class="caption">Blood pressure is measured on the upper arm because it is at about the height of the heart.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Soft veins</h2>
+        <p>Gravity alone does not stop blood returning from the feet. Arteries and veins together form a U-shaped tube: blood going down gains as much pressure as blood coming up loses, as in a siphon.</p>
+        <p>The problem is that vein walls are thin and stretchy. The extra pressure in the lower body <dfn data-part="pool">inflates the veins</dfn>, and they fill up with blood that would otherwise return to the heart. On standing up, about 500 to 800&nbsp;mL shifts into the legs and lower body within a few seconds.</p>
+        <p>With less blood returning, the next few heartbeats push out less, and the pressure reaching the head drops further.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Sensors at the head's entrance</h2>
+        <p>Pressure sensors called <dfn data-part="baro">baroreceptors</dfn> sit in the wall of the <dfn data-part="baro">carotid sinus</dfn>, where each carotid artery divides, and in the aortic arch. They measure the pressure of the blood about to enter the head.</p>
+        <p>When the pressure drops, they signal the brainstem within a beat or two. It raises the heart rate and narrows vessels in the legs and gut. This <dfn>baroreceptor reflex</dfn> restores the pressure at the head within about ten to twenty seconds of standing up.</p>
+        <p class="caption">The graph replays standing up from lying down.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>When the reflex is too slow: fainting</h2>
+        <p>Standing up quickly, heat, dehydration, illness or standing still for a long time can overwhelm the reflex. The pressure at the head keeps falling, vision greys out, and the person faints. This is called <dfn>syncope</dfn>.</p>
+        <p>Falling down is a crude but effective correction. Lying flat puts the head level with the heart, gravity no longer works against the supply to the brain, and consciousness usually returns within seconds. Raising the legs helps further.</p>
+        <p class="caption">Soldiers standing still on parade are a classic example: their calf muscles are not working, and blood pools in their legs.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Valves in the veins</h2>
+        <p>The veins of the legs contain one-way <dfn data-part="vvalve">valves</dfn> every few centimetres. Each valve has two thin flaps that point towards the heart. Flow towards the heart pushes them open; flow back towards the foot pushes them shut.</p>
+        <p>Valves do not lift blood by themselves. Standing still, they stay open, blood creeps slowly upward, and the pressure in the ankle veins is about 90&nbsp;mmHg, the weight of the full column of blood up to the heart.</p>
+        <p>What the valves do is make sure that any squeeze on the vein moves blood one way: up.</p>
+        <p class="caption">Close-up of a deep vein in the lower leg. The heart is towards the top.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>The calf muscle pump</h2>
+        <p>The deep veins of the leg run between the muscles. When the <dfn data-part="calf">calf muscle</dfn> contracts, during a step for example, it squeezes these veins. Blood is pushed up through the valve above, and the valve below shuts.</p>
+        <p>When the muscle relaxes, the vein refills from below, and the valve above stops blood falling back. Each step pumps a little blood towards the heart. This is the <dfn>calf muscle pump</dfn>, sometimes called the second heart.</p>
+        <p>After a few steps of walking, the pressure in the ankle veins falls from about 90 to about 20&ndash;30&nbsp;mmHg. Breathing helps in the same way: each breath in lowers the pressure in the chest and draws blood into the large veins there.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Leaky valves</h2>
+        <p>If the flaps of a valve no longer meet, because the vein has stretched or an earlier clot damaged it, blood falls back each time the muscle relaxes. The pump loses much of its effect, and the pressure in the leg veins stays high even while walking. This is <dfn>chronic venous insufficiency</dfn>.</p>
+        <p>Veins near the surface then stretch, lengthen and twist: these are <dfn data-part="varicose">varicose veins</dfn>. The high pressure also pushes fluid out of the capillaries into the surrounding tissue, causing swollen ankles and, in severe cases, skin damage and ulcers.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Sitting for hours</h2>
+        <p>Sitting still, the calf muscle pump is idle. In addition, the veins are bent where the hips and knees are flexed, and the front edge of the seat presses on the back of the thighs.</p>
+        <p>Flow in the <dfn data-part="legvein">deep leg veins</dfn> becomes slow. Fluid leaks from the capillaries faster than it is carried away, so the feet and ankles swell; after a long flight, shoes often feel tight.</p>
+        <p>Swelling is uncomfortable but usually harmless. The greater concern is what slow blood does.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Clots</h2>
+        <p>Blood that moves slowly is more likely to clot. Three conditions favour clotting, known as <dfn>Virchow's triad</dfn> (Rudolf Virchow, 1856): slow flow, damage to the vessel wall, and blood that clots more easily than normal, for example after surgery, during pregnancy, with some hormonal contraceptives, with cancer or with some inherited conditions.</p>
+        <p>A clot in a deep vein of the leg is a <dfn data-part="dvt">deep vein thrombosis</dfn> (DVT). It often starts in the pocket behind a valve flap. A piece can break off, travel up the vena cava and through the right side of the heart, and lodge in an artery of the lungs. This <dfn data-part="pe">pulmonary embolism</dfn> can be fatal.</p>
+        <p>Travel of more than four hours roughly doubles the risk of a clot. For a healthy traveller the absolute risk stays low, around 1 in 5,000 long flights.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Keeping blood moving</h2>
+        <p>The calf muscle pump does not need walking. Raising the toes and then the heels while seated, so-called <dfn>ankle pumps</dfn>, squeezes the deep veins and restarts the flow.</p>
+        <ul>
+          <li>Stand up and walk for a few minutes every hour or so.</li>
+          <li>Move the feet and ankles while seated; avoid sitting with legs crossed for long.</li>
+          <li>Drink enough water, since dehydration thickens the blood.</li>
+          <li>People at higher risk may be advised to wear compression stockings, which squeeze the leg from outside.</li>
+        </ul>
+      </section>
+
+      <section data-step class="step">
+        <h2>Summary</h2>
+        <ul>
+          <li>The heart is two pumps in series, each moving about 5 litres a minute at rest.</li>
+          <li>Blood slows in the capillaries, where the exchange happens, and loses most of its pressure on the way.</li>
+          <li>The brain gets its own branches from the top of the aortic arch, a ring that joins them, and flow held steady by autoregulation and pressure sensors at its entrance.</li>
+          <li>Standing, gravity fills the soft leg veins; if the reflex cannot compensate, a person faints.</li>
+          <li>Valves and the calf muscle pump return blood from the feet. Sitting still turns the pump off, which slows the blood and favours clots.</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <div class="after">
+    <div class="note">
+      <h3>Planned expansion</h3>
+      <ul>
+        <li><b>One heartbeat in detail.</b> The pressure&ndash;volume loop, heart sounds and the ECG lined up on one time axis.</li>
+        <li><b>The heart's wiring.</b> How the sinoatrial node sets the rhythm and the signal spreads through the chambers.</li>
+        <li><b>Exercise.</b> How the flow is shared out differently, and why output can rise fivefold.</li>
+        <li><b>The lymphatic system.</b> The second return route, for fluid that leaks out of the capillaries.</li>
+        <li><b>Giraffes and astronauts.</b> Circulation with a very long neck, and with no gravity at all.</li>
+        <li><b>Interactive.</b> A slider for posture and activity, showing pressure at head and feet and leg-vein flow.</li>
+      </ul>
+    </div>
+    <p class="caption">Diagrams are simplified and schematic. The body is shown from the side as a single outline, vessels are drawn far thicker than real, only the main routes are shown, and the heart close-up is not anatomically shaped. Numbers are typical values for a resting adult and vary between people.</p>
+    <section class="reading">
+      <h3>Further reading</h3>
+      <ul>
+        <li><a href="https://en.wikipedia.org/wiki/Heart">Heart</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Circulatory_system">Circulatory system</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Cardiac_output">Cardiac output</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Stroke_volume">Stroke volume</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Capillary">Capillary</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Blood_pressure">Blood pressure</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Aorta">Aorta</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Circle_of_Willis">Circle of Willis</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Cerebral_autoregulation">Cerebral autoregulation</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Baroreflex">Baroreflex</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Carotid_sinus">Carotid sinus</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Orthostatic_hypotension">Orthostatic hypotension</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Syncope_(medicine)">Syncope (medicine)</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Vein">Vein</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Skeletal_muscle_pump">Skeletal muscle pump</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Chronic_venous_insufficiency">Chronic venous insufficiency</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Varicose_veins">Varicose veins</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Edema">Edema</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Deep_vein_thrombosis">Deep vein thrombosis</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Pulmonary_embolism">Pulmonary embolism</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Virchow%27s_triad">Virchow&#x27;s triad</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/William_Harvey">William Harvey</a><span class="src">Wikipedia</span></li>
+      </ul>
+    </section>
+    <section class="references">
+      <h3>References</h3>
+      <ol>
+        <li>Hall JE, Hall ME. <cite>Guyton and Hall Textbook of Medical Physiology</cite>. 14th ed. Philadelphia: Elsevier; 2020. Cardiac output, distribution of flow, pressures, cross-sectional area and speed of blood.</li>
+        <li>Harvey W. <cite>Exercitatio anatomica de motu cordis et sanguinis in animalibus</cite>. Frankfurt: William Fitzer; 1628.</li>
+        <li>Lassen NA. Cerebral blood flow and oxygen consumption in man. <cite>Physiological Reviews</cite>. 1959;39(2):183&ndash;238. Autoregulation range.</li>
+        <li>Alpers BJ, Berry RG, Paddison RM. Anatomical studies of the circle of Willis in normal brain. <cite>AMA Archives of Neurology and Psychiatry</cite>. 1959;81(4):409&ndash;418.</li>
+        <li>Rowell LB. <cite>Human Cardiovascular Control</cite>. New York: Oxford University Press; 1993. Pooling on standing and the baroreceptor reflex.</li>
+        <li>Pollack AA, Wood EH. Venous pressure in the saphenous vein at the ankle in man during exercise and changes in posture. <cite>Journal of Applied Physiology</cite>. 1949;1(9):649&ndash;662.</li>
+        <li>Virchow R. <cite>Gesammelte Abhandlungen zur wissenschaftlichen Medicin</cite>. Frankfurt: Meidinger; 1856.</li>
+        <li>World Health Organization. <cite>WHO Research Into Global Hazards of Travel (WRIGHT) Project: Final Report of Phase I</cite>. Geneva: WHO; 2007. Risk of venous thrombosis after long-distance travel.</li>
+      </ol>
+    </section>
+  </div>
+
+  <script src="../../shared/explainer.js"></script>
+  <script src="body.js"></script>
+  <script src="scenes.js"></script>
+</body>
+</html>
