@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Protein folding</title>
+  <meta name="description" content="How a chain of amino acids folds into a working protein, and how knowing that shape is used to make medicines, explained step by step with diagrams.">
+  <link rel="stylesheet" href="../../shared/explainer.css">
+  <link rel="stylesheet" href="folding.css">
+</head>
+<body>
+  <div class="progress"></div>
+  <nav class="topbar"><a href="../../index.html">&larr; All explainers</a></nav>
+
+  <main class="explainer">
+
+    <!-- ===== Stage: drawings that change as the page scrolls ===== -->
+    <div class="stage" aria-hidden="true">
+      <!-- Water molecules (many small particles, so canvas) -->
+      <canvas id="water"></canvas>
+
+      <!-- Everything else is one SVG, built in scenes.js -->
+      <svg class="drawing" id="drawing" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="g-ground" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#7d8896"/>
+            <stop offset="1" stop-color="#4c5560"/>
+          </linearGradient>
+          <linearGradient id="g-steel" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#8e99a5"/>
+            <stop offset="0.45" stop-color="#dde4ea"/>
+            <stop offset="1" stop-color="#87929e"/>
+          </linearGradient>
+          <linearGradient id="g-partner" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#d9c9ee"/>
+            <stop offset="1" stop-color="#9c86bd"/>
+          </linearGradient>
+          <linearGradient id="g-heat" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#b8643c"/>
+            <stop offset="1" stop-color="#e89a62"/>
+          </linearGradient>
+          <!-- Hatching marks cut surfaces (the funnel is drawn in cross-section) -->
+          <pattern id="hatch-ground" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="9" stroke="rgba(255,255,255,0.13)" stroke-width="1.5"/>
+          </pattern>
+          <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glow-lit" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#f3d27a" flood-opacity="1"/>
+            <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#e2b955" flood-opacity="0.7"/>
+          </filter>
+        </defs>
+      </svg>
+
+      <!-- Colour key; each entry lists the steps where it applies -->
+      <div class="legend" id="legend">
+        <span data-steps="0,2-4,6,13"><i class="sw sw-phob"></i>Water-avoiding (hydrophobic)</span>
+        <span data-steps="0,2-4,6,13"><i class="sw sw-phil"></i>Water-loving (hydrophilic)</span>
+        <span data-steps="2-3"><i class="sw sw-water"></i>Water</span>
+        <span data-steps="5,9-12"><i class="sw sw-helix"></i>Helix</span>
+        <span data-steps="5,9-12"><i class="sw sw-strand"></i>Sheet strand</span>
+        <span data-steps="9"><i class="sw sw-partner"></i>Natural partner</span>
+        <span data-steps="0,10,12,13"><i class="sw sw-drug"></i>Drug</span>
+        <span data-steps="7-8"><i class="sw sw-ball"></i>Folding chain</span>
+        <span data-steps="7-8"><i class="sw sw-ground"></i>Energy landscape</span>
+      </div>
+    </div>
+
+    <!-- ===== Text: one <section data-step> per scene =====
+         Terms marked data-part light up the matching part of the drawing on hover. -->
+    <div class="steps">
+
+      <section data-step class="step hero">
+        <h1>Protein folding</h1>
+        <p><dfn>Protein folding</dfn> is the physical process by which a chain of amino acids, made by the cell as a linear string, takes on a specific three-dimensional shape. That shape decides what the protein does: which molecules it binds, which reactions it speeds up and which signals it passes on.</p>
+        <p>Knowing the folded shape of a protein lets chemists design drugs that fit it, and explains diseases in which proteins fold wrongly.</p>
+        <table class="infobox">
+          <tr><th>Field</th><td>Biochemistry, structural biology, biophysics</td></tr>
+          <tr><th>Building blocks</th><td>20 standard amino acids</td></tr>
+          <tr><th>Key principle</th><td>The sequence determines the structure (Anfinsen, Nobel Prize 1972)</td></tr>
+          <tr><th>Prediction</th><td>AlphaFold 2 (2020); Nobel Prize in Chemistry 2024</td></tr>
+          <tr><th>Related</th><td>Enzymes, chaperones, amyloid, drug design</td></tr>
+        </table>
+        <div class="scroll-cue">Scroll to fold a protein<span class="chevron"></span></div>
+      </section>
+
+      <section data-step class="step">
+        <h2>A chain of amino acids</h2>
+        <p>A protein is a chain of small molecules called <dfn data-part="aa">amino acids</dfn>, joined end to end. Cells use 20 standard amino acids. A typical protein has a few hundred of them; the model here has 48.</p>
+        <p>The order of the amino acids is copied from a gene. A molecular machine called the <dfn data-part="ribosome">ribosome</dfn> reads a working copy of the gene, the <dfn data-part="mrna">messenger RNA</dfn>, and adds one amino acid at a time.</p>
+        <p class="caption">Letters are the standard one-letter codes for amino acids. Faint beads have not been added yet.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Water-loving and water-avoiding</h2>
+        <p>Each amino acid has a side chain that gives it its own chemical character. For folding, the most important difference is how the side chain behaves in water.</p>
+        <ul>
+          <li><dfn data-part="phob">Hydrophobic</dfn> (water-avoiding) side chains are oily and do not mix with water.</li>
+          <li><dfn data-part="phil">Hydrophilic</dfn> (water-loving) side chains are charged or polar and mix easily with water.</li>
+        </ul>
+        <p>Inside a cell, the new chain is surrounded by water molecules that are constantly moving and bumping into it.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Hydrophobic collapse</h2>
+        <p>Water molecules bond more freely with each other when oily surfaces are hidden from them. As a result, the hydrophobic amino acids gather together on the inside of the chain, and the hydrophilic ones stay on the outside, facing the water.</p>
+        <p>This <dfn>hydrophobic collapse</dfn> is the main force that drives folding. It turns the loose chain into a compact but still irregular ball within a fraction of a second.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Helices and sheets</h2>
+        <p>Within the compact ball, short stretches of the chain settle into regular patterns held together by <dfn data-part="hbond">hydrogen bonds</dfn>, weak attractions between atoms of the chain's backbone.</p>
+        <ul>
+          <li>In an <dfn data-part="helix">alpha helix</dfn>, the chain winds into a coil, and each turn bonds to the turn before it.</li>
+          <li>In a <dfn data-part="sheet">beta sheet</dfn>, two or more straight stretches, called strands, lie side by side and bond to each other.</li>
+        </ul>
+        <p>These patterns are called the <dfn>secondary structure</dfn>.</p>
+        <p class="caption">Helices are drawn as ribbons that wind around their axis; strands as flat arrows.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>The native fold</h2>
+        <p>The helices and sheets, joined by <dfn data-part="loop">loops</dfn>, pack tightly against each other into one specific overall shape. This is the <dfn>native fold</dfn>, also called the tertiary structure. A chain with a given sequence folds into the same shape every time.</p>
+        <p>Many proteins have a <dfn data-part="pocket">pocket</dfn>: a groove on the surface where another molecule can bind. The pocket is often where the protein does its work.</p>
+        <p class="caption">This drawing is a flattened model. Real proteins fold in three dimensions.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Sequence determines structure</h2>
+        <p>In experiments on the enzyme ribonuclease around 1960, the American biochemist Christian Anfinsen unfolded the protein with chemicals such as urea. The unfolded protein stopped working. When the chemicals were removed, the chain folded back into its original shape by itself, and it worked again.</p>
+        <p>This showed that the information needed to fold is contained in the sequence of amino acids. The idea is known as <dfn>Anfinsen's dogma</dfn>. Anfinsen shared the Nobel Prize in Chemistry in 1972.</p>
+        <p class="caption">Heat also unfolds proteins, which is why a boiled egg white turns solid and does not turn back.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>The energy landscape</h2>
+        <p>A chain has a very large number of possible shapes. Testing them one at a time would take far longer than the age of the universe, yet small proteins fold in microseconds to seconds. This contradiction is called <dfn>Levinthal's paradox</dfn> (Cyrus Levinthal, 1969).</p>
+        <p>The usual explanation is an <dfn data-part="funnel">energy landscape</dfn> shaped like a funnel. Each change that buries more hydrophobic surface or forms more bonds lowers the energy, so the chain moves downhill without searching. The width of the funnel stands for the number of possible shapes, and the bottom is the native fold.</p>
+        <p class="caption">The funnel is a cross-section of a surface with thousands of dimensions, one for each way the chain can bend.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Misfolding</h2>
+        <p>The landscape is not perfectly smooth. A chain can become stuck in a <dfn data-part="trap">local minimum</dfn>, a wrong shape from which there is no downhill path. A change of a single amino acid can also make the native fold unstable.</p>
+        <p>Misfolded proteins expose their hydrophobic parts and tend to stick together. Some stack into long fibres called <dfn data-part="amyloid">amyloid</dfn>, which are found in Alzheimer's disease, Parkinson's disease and several other conditions.</p>
+        <p>Cells have helper proteins called <dfn data-part="chaperone">chaperones</dfn> that bind stuck chains and give them another chance to fold.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Shape and function</h2>
+        <p>A protein works by binding other molecules. An enzyme, for example, binds a specific <dfn data-part="partner">partner molecule</dfn> in its pocket and changes it chemically.</p>
+        <p>The pocket fits its partner in shape and in the pattern of electric charges on its surface. The fit is often compared to a lock and key, but proteins are flexible: the pocket closes slightly around its partner, which is called <dfn>induced fit</dfn>.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Designing a drug to fit</h2>
+        <p>Many drugs are small molecules that block a pocket, so that the natural partner can no longer bind. When the shape of the pocket is known, chemists can design candidates to fit it. This is called <dfn>structure-based drug design</dfn>.</p>
+        <ul>
+          <li>A molecule that is too large cannot enter.</li>
+          <li>A molecule of the right size with the wrong charges is pushed away.</li>
+          <li>A <dfn data-part="drug">drug</dfn> that fits in both ways binds and blocks the pocket.</li>
+        </ul>
+        <p>HIV protease inhibitors, introduced in the mid-1990s, were among the first widely used drugs developed this way.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Predicting structures</h2>
+        <p>Protein shapes are measured with X-ray crystallography, nuclear magnetic resonance or cryo-electron microscopy. A single structure can take months or years to solve, and many proteins have never been measured.</p>
+        <p>In 2020 the program <dfn>AlphaFold 2</dfn>, from Google DeepMind, predicted structures from the sequence alone, often close to the accuracy of experiments. More than 200 million predicted structures are now freely available. Demis Hassabis and John Jumper shared the 2024 Nobel Prize in Chemistry for this work, with David Baker for protein design.</p>
+        <p>Predictions are less reliable for flexible parts of a protein, and a predicted shape does not show whether a drug will work. They are used as a starting point for experiments, not as a replacement.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Other uses in medicine</h2>
+        <p>Folding matters for medicine in more ways than blocking pockets:</p>
+        <ul>
+          <li><b>Correctors</b> help a misfolded protein reach its native fold. In cystic fibrosis, the most common mutation makes the CFTR protein misfold; corrector drugs such as elexacaftor and tezacaftor let more of it fold and reach the cell surface.</li>
+          <li><b>Stabilizers</b> hold a protein together. Tafamidis binds transthyretin, a protein made of four parts, and keeps it from coming apart and forming amyloid.</li>
+          <li><b>Protein medicines</b> such as insulin and antibodies are made by living cells grown in tanks. They only work if they fold correctly, so production is designed around folding.</li>
+        </ul>
+      </section>
+
+      <section data-step class="step">
+        <h2>Summary</h2>
+        <ul>
+          <li>A protein is made as a chain of amino acids in an order set by a gene.</li>
+          <li>Hydrophobic amino acids gather inside, away from water, and the chain collapses.</li>
+          <li>Hydrogen bonds form helices and sheets, which pack into one native fold.</li>
+          <li>The sequence alone determines the fold, guided down a funnel-shaped energy landscape.</li>
+          <li>Misfolded proteins can clump into amyloid and cause disease.</li>
+          <li>Drugs are designed to fit pockets in the folded shape, or to help a protein fold and stay folded.</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <div class="after">
+    <div class="note">
+      <h3>Planned expansion</h3>
+      <ul>
+        <li><b>Prions.</b> A misfolded protein that converts healthy copies into its own shape.</li>
+        <li><b>Chaperones in detail.</b> How a barrel-shaped chaperone gives a chain a protected space to fold.</li>
+        <li><b>Protein design.</b> Running folding backwards: choosing a sequence to make a new shape.</li>
+        <li><b>Antibodies.</b> How their loops fold to fit almost any target.</li>
+        <li><b>Measuring structures.</b> How X-ray crystallography and cryo-electron microscopy turn data into a model.</li>
+        <li><b>Why drug discovery is still hard.</b> A good fit is not enough; a drug must also reach its target, avoid other proteins and be safe.</li>
+      </ul>
+    </div>
+    <p class="caption">Diagrams are simplified. The protein is drawn flat, with 48 amino acids instead of the few hundred of a typical protein, and molecules are not to scale. The amino acid sequence is invented.</p>
+  </div>
+
+  <script src="../../shared/explainer.js"></script>
+  <script src="protein.js"></script>
+  <script src="scenes.js"></script>
+</body>
+</html>

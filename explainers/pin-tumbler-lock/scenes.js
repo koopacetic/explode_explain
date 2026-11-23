@@ -15,7 +15,15 @@
  *  10 Incorrect key   key swapped for one wrong cut; turn is blocked
  *  11 Release         back to 3D padlock; key turns the cam, the cam slides
  *                     the latch, the shackle springs up
- *  12 Summary         padlock reassembles and spins again
+ *  12 Tolerances      back to the sections; the end view is replaced by a top
+ *                     view at the shear line; chamber offsets grow (exaggerated)
+ *  13 Tension         tension wrench goes in; plug turns until one pin binds
+ *  14 Setting a pin   pick lifts the binding pin until it sets; next pin binds
+ *  15 Single pin      remaining pins set in binding order; plug turns open
+ *  16 Raking          rake oscillates in the keyway; some pins set by chance
+ *  17 Security pins   spool pin causes a false set, then counter-rotation
+ *  18 Keyspace        bitting digits count through the combinations
+ *  19 Summary         padlock reassembles and spins again
  */
 (function () {
   "use strict";
@@ -40,12 +48,13 @@
   var spin = 0;
 
   function render3d(t, dt, opts) {
-    var opacity = t < 6 ? 1 - range(t, 2.95, 3.2) : range(t, 10.85, 11.1);
+    var opacity = t < 6 ? 1 - range(t, 2.95, 3.2)
+      : range(t, 10.85, 11.1) * (1 - range(t, 11.85, 12.05)) + range(t, 18.85, 19.1);
     view3d.style.opacity = opacity;
     if (opacity <= 0.001) return;
 
     // --- spin ---
-    var spinning = t < 6 ? 1 - range(t, 0.55, 1.05) : range(t, 12.0, 12.4);
+    var spinning = t < 6 ? 1 - range(t, 0.55, 1.05) : range(t, 19.0, 19.4);
     if (opts.reduceMotion) spinning = 0;
     spin += dt * 45 * spinning;
     if (spinning < 1) {
@@ -131,7 +140,8 @@
     [6.85, FULL], [7.0, SIDE], [8.85, SIDE], [9.0, FULL]
   ];
   var VIEW_NARROW = [
-    [3.0, END], [4.9, END], [5.05, SIDE], [8.85, SIDE], [9.0, END], [9.85, END], [10.0, SIDE]
+    [3.0, END], [4.9, END], [5.05, SIDE], [8.85, SIDE], [9.0, END], [9.85, END], [10.0, SIDE],
+    [11.8, SIDE], [11.95, END], [13.8, END], [13.95, SIDE]
   ];
 
   function depthY(d) { return 293 + 7 * d; }  // y of the cut bottom for depth d
@@ -225,20 +235,164 @@
 
   var profiles = { correct: keyProfile(CORRECT), wrong: keyProfile(WRONG) };
 
+
+  /* ---- Lock picking model (steps 12-18) ----
+   * Top view: each housing hole is drilled ERR px off the ideal line. When the
+   * plug turns, its holes move down by d. A driver pin has SLACK px of play, so
+   * pin j binds (is pinched) once d reaches BIND[j] = ERR[j] + SLACK. Pins
+   * therefore bind, and must be set, in ascending order of BIND. */
+  var ERR = [3, -3, 7.5, 0, 12];
+  var SLACK = 4;
+  var BIND = ERR.map(function (e) { return e + SLACK; });
+  var ORDER = [0, 1, 2, 3, 4].sort(function (a, b) { return BIND[a] - BIND[b]; });
+  var SPOOL = ORDER[2];                // pin given a spool driver in step 17
+  var OPEN = 30;                       // plug travel once every pin is set
+  var PICK_LOW = 344;                  // pick tip height when not lifting
+  var TX = [700, 755, 810, 865, 920];  // chamber centres (x), top view
+
+  function setTip(j) { return SHEAR + PIN_LEN[j]; } // tip height that puts the gap on the shear line
+
+  // A lift: the pick moves under a pin (move -> up), lifts it (up -> set),
+  // the pin sets, and the pick drops back (set -> drop).
+  function lift(pin, move, up, set, drop) { return { pin: pin, move: move, up: up, set: set, drop: drop }; }
+
+  var PHASES = [
+    { from: 11.5, to: 15.9, pickOut: [15.55, 15.7], lifts: [
+      lift(ORDER[0], 13.85, 14.15, 14.45, 14.55),
+      lift(ORDER[1], 14.92, 14.96, 15.04, 15.06),
+      lift(ORDER[2], 15.07, 15.11, 15.19, 15.21),
+      lift(ORDER[3], 15.22, 15.26, 15.34, 15.36),
+      lift(ORDER[4], 15.37, 15.41, 15.49, 15.51)] },
+    { from: 15.9, to: 16.9, rakeSets: [16.3, 16.42, 16.55] },
+    { from: 16.9, to: 17.9, pickOut: [17.72, 17.85], falseSet: [17.2, 17.3, 17.35, 17.62], lifts: [
+      lift(ORDER[0], 16.95, 16.99, 17.06, 17.08),
+      lift(ORDER[1], 17.09, 17.12, 17.18, 17.2),
+      lift(SPOOL, 17.3, 17.35, 17.62, 17.66)] },
+    { from: 17.9, to: 99 }
+  ];
+
+  function phaseAt(t) {
+    for (var i = 0; i < PHASES.length; i++) if (t < PHASES[i].to) return PHASES[i];
+    return PHASES[PHASES.length - 1];
+  }
+
+  // Times at which pins set in this phase, in binding order.
+  function setTimes(ph) {
+    if (ph.rakeSets) return ph.rakeSets;
+    return (ph.lifts || []).map(function (l) { return l.set; });
+  }
+
+  function isSet(ph, j, t) {
+    var times = setTimes(ph);
+    for (var k = 0; k < times.length; k++) if (ORDER[k] === j && t >= times[k]) return true;
+    return false;
+  }
+
+  // Rake: a wavy blade. Top edge in rake coordinates (tip at x = 0).
+  var RAKE = [[-500, 350], [-250, 348], [-230, 318], [-200, 348], [-170, 330], [-140, 348],
+    [-110, 318], [-80, 348], [-50, 328], [-15, 348], [0, 350]];
+
+  function pickState(t) {
+    var ph = phaseAt(t);
+    var st = { ph: ph, pick: 0, pickX: 40, tipY: PICK_LOW, lifting: -1, rake: 0, rakeX: -10, falseSet: 0 };
+
+    // Tension: on from step 13, eased off between phases, off for the keyspace step.
+    var tension = ease(range(t, 13.1, 13.35)) *
+      (1 - win(t, 15.8, 15.88, 15.95, 16.05)) *
+      (1 - win(t, 16.82, 16.88, 16.92, 16.98)) *
+      (1 - ease(range(t, 17.85, 18.0)));
+
+    // Plug travel: limited by the first pin not yet set; eases on as each pin sets.
+    var times = setTimes(ph), d = BIND[ORDER[0]];
+    times.forEach(function (s, k) {
+      var next = k + 1 < ORDER.length ? BIND[ORDER[k + 1]] : OPEN;
+      d = lerp(d, next, ease(range(t, s, s + 0.06)));
+    });
+    if (ph.falseSet) {
+      var fs = ph.falseSet;
+      st.falseSet = ease(range(t, fs[0], fs[1])) * (1 - range(t, fs[2], fs[3]));
+      // The plug turns into the spool's waist: further than a normal pin allows,
+      // but not as far as the next pin's binding point.
+      var room = BIND[ORDER[3]] - BIND[SPOOL];
+      d += 0.9 * room * st.falseSet;
+    }
+    st.d = d * tension;
+    st.tension = tension;
+
+    // Pick position and lift.
+    if (ph.lifts) {
+      var first = ph.lifts[0];
+      st.pick = win(t, first.move - 0.05, first.move, ph.pickOut[1] - 0.03, ph.pickOut[1]);
+      var x = 40;
+      ph.lifts.forEach(function (l) {
+        if (t >= l.move) x = lerp(x, CX[l.pin], ease(range(t, l.move, l.up)));
+        if (t >= l.up && t < l.set) {
+          st.lifting = l.pin;
+          st.tipY = lerp(PICK_LOW, setTip(l.pin), ease(range(t, l.up, l.set)));
+        } else if (t >= l.set && t < l.drop) {
+          st.tipY = lerp(setTip(l.pin), PICK_LOW, range(t, l.set, l.drop));
+        }
+      });
+      st.pickX = lerp(x, -120, ease(range(t, ph.pickOut[0], ph.pickOut[1])));
+    }
+
+    // Rake: slide in, scrub back and forth, slide out.
+    if (ph.rakeSets) {
+      st.rake = win(t, 15.92, 15.97, 16.8, 16.87);
+      var inX = lerp(-10, 300, ease(range(t, 15.95, 16.1)));
+      var scrub = Math.sin(range(t, 16.1, 16.7) * Math.PI * 2 * 2.5) * 100;
+      st.rakeX = lerp(inX + scrub, -10, ease(range(t, 16.7, 16.85)));
+    }
+    return st;
+  }
+
+  // ---- picking elements ----
+  var tools = g("side-tools");
+  var wrench = svg("path", { class: "part-wrench", d: "M100 358 H54 Q44 358 44 368 V470",
+    fill: "none", stroke: "#c3ccd5", "stroke-width": 7, "stroke-linecap": "round", "stroke-linejoin": "round" }, tools);
+  var pickTool = svg("path", { class: "part-pick", fill: "none", stroke: "#dfe5ea", "stroke-width": 5,
+    "stroke-linecap": "round", "stroke-linejoin": "round" }, tools);
+  var rakeTool = svg("path", { class: "part-rake", fill: "#cfd7de", stroke: "#7d8893", "stroke-width": 1 }, tools);
+  rakeTool.setAttribute("d", "M" + RAKE.map(function (p) { return p[0] + " " + p[1]; }).join(" L") + " L0 360 L-500 360 Z");
+
+  var spools = CX.map(function () {
+    return svg("path", { fill: "url(#g-driver)", class: "part-spool part-driver" }, g("side-drivers"));
+  });
+  function spoolPath(cx, top) {
+    return "M" + (cx - 11) + " " + top + " h22 v10 h-6 v26 h6 v10 h-22 v-10 h6 v-26 h-6 Z";
+  }
+
+  var topHousingHoles = [], topPlugHoles = [], topDrivers = [], topKeyPins = [];
+  TX.forEach(function (x) {
+    topPlugHoles.push(svg("circle", { cx: x, cy: 320, r: 15, fill: "#262c33" }, g("top-plug-holes")));
+    topKeyPins.push(svg("circle", { cx: x, cy: 320, r: 12, fill: "url(#g-keypin)", class: "part-keypin" }, g("top-plug-holes")));
+    topHousingHoles.push(svg("circle", { cx: x, cy: 320, r: 15, fill: "none", stroke: "#dfe5ea",
+      "stroke-width": 1.5, "stroke-dasharray": "4 3" }, g("top-housing-holes")));
+    topDrivers.push(svg("circle", { cx: x, cy: 320, r: 13, fill: "url(#g-driver)", class: "part-driver" }, g("top-pins")));
+  });
+  var topBinding = g("top-binding");
+
   function renderSection(t, opts) {
     // The camera is set even while hidden: the 3D view lines up with it.
     var box = E.keyframes(t, opts.narrow ? VIEW_NARROW : VIEW_WIDE);
     section.setAttribute("viewBox", box.join(" "));
 
-    var opacity = range(t, 2.95, 3.2) * (1 - range(t, 10.85, 11.05));
+    var opacity = range(t, 2.95, 3.2) * (1 - range(t, 10.85, 11.05)) + win(t, 11.85, 12.05, 18.85, 19.05);
     section.style.opacity = opacity;
     legend.style.opacity = opacity * range(t, 5.5, 5.8);
     if (opacity <= 0.001) return;
 
+    var picking = t > 11.5;
+
     // The side view joins slightly after the end view, which the barrel turns into.
     g("side").style.opacity = t < 6 ? range(t, 3.1, 3.4) : 1;
+    // From step 12 the end view is replaced by the top view.
+    g("end").style.display = picking ? "none" : "";
+    g("top").style.display = picking ? "" : "none";
+    // On phones, hide the top view's edge while the camera frames the side view.
+    g("top").style.opacity = opts.narrow ? E.clamp((box[0] - 200) / 400) : 1;
 
-    // --- key position and which key ---
+    // --- key position and which key (steps 7-10) ---
     var swapped = t > 10.17;
     var cuts = swapped ? WRONG : CORRECT;
     var pts = swapped ? profiles.wrong : profiles.correct;
@@ -246,15 +400,19 @@
       ? ease(range(t, 10.2, 10.45))
       : ease(range(t, 6.9, 7.7)) * (1 - ease(range(t, 10.0, 10.15)));
     var keyX = lerp(KEY_OUT, KEY_IN, insert);
-    var keyOpacity = range(t, 6.75, 6.9);
+    var keyOpacity = picking ? 0 : range(t, 6.75, 6.9);
     var keyPresent = keyOpacity > 0;
+
+    // --- lock picking state (steps 12-18) ---
+    var pk = picking ? pickState(t) : null;
 
     // --- plug rotation (degrees) ---
     var theta =
       360 * ease(range(t, 4.3, 4.85)) +
       3 * Math.sin(range(t, 6.15, 6.8) * Math.PI * 6) +
       90 * ease(range(t, 9.05, 9.5)) * (1 - ease(range(t, 9.8, 10.0))) +
-      3 * Math.sin(range(t, 10.5, 10.8) * Math.PI * 6);
+      3 * Math.sin(range(t, 10.5, 10.8) * Math.PI * 6) +
+      90 * ease(range(t, 15.55, 15.75)) * (1 - ease(range(t, 15.8, 15.9)));
 
     // --- status highlight (red = blocking, green = clear) ---
     var status = Math.max(
@@ -262,23 +420,34 @@
       win(t, 7.85, 8.1, 9.75, 9.9),
       win(t, 10.45, 10.55, 10.85, 10.95)
     );
+    var pickStatus = win(t, 13.3, 13.45, 17.85, 17.95);
 
     // --- pins ---
     var pinsVisible = t > 4.9;
+    var binding = -1;
     stacks.forEach(function (st, j) {
       // Pins drop in with a small bounce at the bottom.
       var p = range(t, 4.95 + j * 0.07, 5.3 + j * 0.07);
       var drop = E.easeOutBack(p, 0.9);
-      var dy = -(1 - drop) * 120;
+      var dy = picking ? 0 : -(1 - drop) * 120;
 
-      var tip = REST;
+      var tip = REST, set = false;
       if (keyPresent) {
         var top = keyTop(pts, st.cx - keyX);
         if (top !== null && top < tip) tip = top;
       }
+      if (pk) {
+        set = isSet(pk.ph, j, t);
+        if (pk.lifting === j) tip = Math.min(tip, pk.tipY);
+        if (pk.rake > 0) {
+          var rt = keyTop(RAKE, st.cx - pk.rakeX);
+          if (rt !== null && rt < tip) tip = rt;
+        }
+      }
       var kpTop = tip - PIN_LEN[j];
-      var driverTop = kpTop - DRIVER;
-      var driverBlocks = kpTop > SHEAR + 0.5;
+      // A set driver pin stays above the shear line, caught on the plug.
+      var driverTop = set ? Math.min(SHEAR - DRIVER, kpTop - DRIVER) : kpTop - DRIVER;
+      var driverBlocks = !set && kpTop > SHEAR + 0.5;
       var keyPinBlocks = kpTop < SHEAR - 0.5;
       st.blocked = driverBlocks || keyPinBlocks;
 
@@ -286,18 +455,32 @@
       st.driver.setAttribute("y", driverTop + dy);
       st.spring.setAttribute("points", springPoints(st.cx, CH_TOP, driverTop + dy));
 
+      // Spool driver in the security pin step.
+      var isSpool = pk && j === SPOOL && t > 16.9 && t < 17.9;
+      st.driver.style.display = isSpool ? "none" : "";
+      spools[j].style.display = isSpool ? "" : "none";
+      if (isSpool) spools[j].setAttribute("d", spoolPath(st.cx, driverTop));
+
       var vis = pinsVisible ? E.clamp(p * 2) : 0;
       st.keypin.style.opacity = vis;
       st.driver.style.opacity = vis;
       st.spring.style.opacity = pinsVisible ? range(t, 5.35, 5.6) : 0;
 
-      outline(st.driver, driverBlocks ? status : 0);
-      outline(st.keypin, keyPinBlocks ? status : 0);
+      if (pk) {
+        var bound = !set && pk.tension > 0.5 && pk.d - ERR[j] >= SLACK - 0.1;
+        if (bound) binding = j;
+        outline(isSpool ? spools[j] : st.driver, bound ? pickStatus : 0, "#e2b955");
+        outline(st.keypin, 0);
+        st.shear.setAttribute("stroke", set ? "#7fd49b" : "#e2b955");
+        st.shear.style.opacity = (set || bound) ? pickStatus : 0;
+      } else {
+        outline(st.driver, driverBlocks ? status : 0);
+        outline(st.keypin, keyPinBlocks ? status : 0);
+        st.shear.setAttribute("stroke", st.blocked ? "#ee6b6b" : "#7fd49b");
+        st.shear.style.opacity = status;
+      }
 
-      st.shear.setAttribute("stroke", st.blocked ? "#ee6b6b" : "#7fd49b");
-      st.shear.style.opacity = status;
-
-      if (j === FOCUS) {
+      if (j === FOCUS && !picking) {
         endKeyPin.setAttribute("d", keyPinPath(END_X, kpTop + dy, tip + dy));
         endKeyPin.style.opacity = vis;
         endDriver.setAttribute("y", driverTop + dy);
@@ -317,7 +500,35 @@
           endKey.style.opacity = 0;
         }
       }
+
+      if (pk) renderTopPin(j, pk, set, t);
     });
+
+    // --- top view ---
+    if (pk) {
+      g("top-plug").setAttribute("transform", "translate(0 " + pk.d * 1.6 + ")"); // same exaggeration as the holes
+      g("top-ideal").style.opacity = win(t, 12.1, 12.3, 13.8, 13.95);
+      topBinding.style.opacity = binding >= 0 ? pickStatus : 0;
+      if (binding >= 0) {
+        topBinding.setAttribute("x", TX[binding]);
+        topBinding.textContent = pk.falseSet > 0.5 ? "False set" : "Binding";
+      }
+    }
+
+    // --- tools ---
+    wrench.style.opacity = pk ? range(t, 12.85, 12.95) * (1 - range(t, 17.9, 18.0)) : 0;
+    wrench.setAttribute("transform", "translate(" + lerp(-120, 0, ease(range(t, 12.85, 13.1))) + " 0)");
+    pickTool.style.opacity = pk ? pk.pick : 0;
+    if (pk) {
+      var px = pk.pickX;
+      pickTool.setAttribute("d", "M" + (px - 600) + " 350 L" + (px - 12) + " 350 Q" + (px - 2) + " 350 " + px + " " + pk.tipY);
+      rakeTool.style.opacity = pk.rake;
+      rakeTool.setAttribute("transform", "translate(" + pk.rakeX + " 0)");
+    } else {
+      rakeTool.style.opacity = 0;
+    }
+    g("side-falseset").setAttribute("x", CX[SPOOL]);
+    g("side-falseset").style.opacity = pk ? E.clamp(pk.falseSet * 2) : 0;
 
     // --- key (side view) ---
     sideKeyGroup.style.opacity = keyOpacity;
@@ -336,23 +547,67 @@
     endShear.setAttribute("stroke-dashoffset", END_SHEAR_LEN * (1 - draw));
     endShear.style.opacity = draw > 0 ? 1 : 0;
 
-    // --- bitting labels ---
-    var bitOpacity = Math.max(win(t, 7.9, 8.15, 9.8, 9.95), win(t, 10.3, 10.45, 10.85, 10.95));
+    // --- bitting labels (and the keyspace counter in step 18) ---
+    var keyspace = win(t, 18.0, 18.15, 18.85, 19.0);
+    var bitOpacity = Math.max(win(t, 7.9, 8.15, 9.8, 9.95), win(t, 10.3, 10.45, 10.85, 10.95), keyspace);
     g("side-bitting").style.opacity = bitOpacity;
-    cuts.forEach(function (d, j) {
+    g("side-keyspace").style.opacity = keyspace;
+    var shown = cuts;
+    if (t > 17.95) {
+      // Count through every combination, like an odometer (base 5).
+      var n = Math.floor(range(t, 18.05, 18.7) * 3124);
+      shown = [0, 0, 0, 0, 0].map(function (_, i) { return Math.floor(n / Math.pow(5, 4 - i)) % 5 + 1; });
+    }
+    shown.forEach(function (d, j) {
       bitLabels[j + 1].textContent = d;
-      bitLabels[j + 1].setAttribute("class", "bit" + (d !== CORRECT[j] ? " bad" : ""));
+      bitLabels[j + 1].setAttribute("class", "bit" + (t < 17.95 && d !== CORRECT[j] ? " bad" : ""));
     });
 
     // --- labels ---
-    g("lbl-parts").style.opacity = range(t, 3.2, 3.45);
-    g("lbl-shear").style.opacity = range(t, 3.95, 4.2);
-    g("lbl-pins").style.opacity = range(t, 5.4, 5.7);
+    // Side-view labels sit between the two views; on phones, hide them while
+    // the camera frames the right-hand view so they do not overlap it.
+    var sideLabels = opts.narrow ? E.clamp((450 - box[0]) / 250) : 1;
+    g("lbl-parts").style.opacity = range(t, 3.2, 3.45) * sideLabels;
+    g("lbl-shear").style.opacity = range(t, 3.95, 4.2) * sideLabels;
+    g("lbl-pins").style.opacity = picking ? 0 : range(t, 5.4, 5.7);
   }
 
-  function outline(el, amount) {
+  // Top view of one chamber: housing hole (dashed, fixed), plug hole (moves
+  // with the plug), and the pin seen from above.
+  function renderTopPin(j, pk, set, t) {
+    var grow = ease(range(t, 12.1, 12.5));
+    var hY = 320 + ERR[j] * grow * 1.6;          // drawn offset, exaggerated further
+    var r = pk.d - ERR[j];                        // plug hole relative to housing hole
+    topHousingHoles[j].setAttribute("cy", hY);
+    var drv = topDrivers[j], kp = topKeyPins[j];
+    if (set) {
+      // Driver above the shear line: shown as a green ring; key pin rides in the plug.
+      drv.setAttribute("cy", hY);
+      drv.setAttribute("r", 13);
+      drv.setAttribute("fill", "none");
+      drv.setAttribute("stroke", "#7fd49b");
+      drv.setAttribute("stroke-width", 2.5);
+      kp.style.opacity = 1;
+    } else {
+      // Driver across the shear line: pushed by the plug hole, up to its slack.
+      var spool = j === SPOOL && t > 16.9 && t < 17.9 && r > SLACK;
+      drv.setAttribute("cy", hY + E.clamp(r - SLACK / 2, 0, SLACK / 2) * 1.6);
+      drv.setAttribute("r", spool ? Math.max(7, 13 - (r - SLACK) * 0.7) : 13);
+      drv.setAttribute("fill", "url(#g-driver)");
+      var bound = pk.tension > 0.5 && r >= SLACK - 0.1;
+      if (bound) {
+        drv.setAttribute("stroke", "#e2b955");
+        drv.setAttribute("stroke-width", 3);
+      } else {
+        drv.removeAttribute("stroke");
+      }
+      kp.style.opacity = 0;
+    }
+  }
+
+  function outline(el, amount, color) {
     if (amount > 0.01) {
-      el.setAttribute("stroke", "#ee6b6b");
+      el.setAttribute("stroke", color || "#ee6b6b");
       el.setAttribute("stroke-width", 3 * amount);
     } else {
       el.removeAttribute("stroke");

@@ -82,6 +82,7 @@
             <g id="side-plug-chambers" class="part-chamber"></g>
             <g id="side-key" class="part-key"></g>
             <g id="side-keypins"></g>
+            <g id="side-tools"></g>
           </g>
           <g id="side-drivers"></g>
           <g id="side-springs"></g>
@@ -112,6 +113,31 @@
           <circle id="end-shear" class="part-shear" cx="810" cy="320" r="60" fill="none" stroke="#e2b955" stroke-width="2.5" filter="url(#glow)"/>
           <text class="cap" x="810" y="520" text-anchor="middle">End section (pin 3)</text>
         </g>
+
+        <!-- Top view at the shear line (lock picking steps) -->
+        <g id="top">
+          <rect class="part-housing" x="670" y="230" width="280" height="180" rx="8" fill="url(#g-housing)"/>
+          <rect x="670" y="230" width="280" height="180" rx="8" fill="url(#hatch-housing)"/>
+          <g id="top-plug">
+            <rect class="part-plug" x="670" y="275" width="280" height="90" fill="url(#g-plug)"/>
+            <rect x="670" y="275" width="280" height="90" fill="url(#hatch-plug)"/>
+            <g id="top-plug-holes"></g>
+          </g>
+          <g id="top-housing-holes"></g>
+          <g id="top-pins"></g>
+          <g id="top-ideal" class="lbl">
+            <line x1="660" y1="320" x2="960" y2="320" stroke="#e2b955" stroke-width="1.5" stroke-dasharray="6 5"/>
+            <text x="946" y="297" class="small accent" text-anchor="end">Ideal line</text>
+          </g>
+          <text id="top-binding" class="small accent" text-anchor="middle" y="222">Binding</text>
+          <text class="small" x="672" y="436">Dashed circles: holes in the housing</text>
+          <text class="small" x="672" y="454">Dark circles: holes in the plug</text>
+          <text class="cap" x="810" y="520" text-anchor="middle">Top view at the shear line (offsets exaggerated)</text>
+        </g>
+
+        <!-- Lock picking labels in the lengthwise section -->
+        <text id="side-falseset" class="accent" text-anchor="middle" y="102">False set</text>
+        <text id="side-keyspace" class="accent big" x="325" y="492" text-anchor="middle">5 depths &#215; 5 pins: 5&#8309; = 3,125 keys</text>
 
         <!-- Labels -->
         <g id="lbl-parts" class="lbl">
@@ -237,6 +263,50 @@
       </section>
 
       <section data-step class="step">
+        <h2>Manufacturing tolerances</h2>
+        <p><dfn>Lock picking</dfn> is opening a lock without its key by moving the pins directly. It is possible because no lock is made perfectly.</p>
+        <p>The pin chambers are meant to lie on a straight line, but each hole is drilled slightly off. The errors are only hundredths of a millimetre, but they decide the order in which the pins can be moved.</p>
+        <p class="caption">Right: the cylinder seen from above, cut at the shear line. The offsets are greatly exaggerated.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Tension and binding</h2>
+        <p>A <dfn data-part="wrench">tension wrench</dfn> is put into the bottom of the keyway and used to apply a light turning force to the plug. The plug turns a tiny amount, until the chamber that is furthest out of line pinches its driver pin between the plug and the housing.</p>
+        <p>This is the <dfn>binding pin</dfn>. The other pins stay loose. Only the binding pin resists being lifted.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Setting a pin</h2>
+        <p>A <dfn data-part="pick">pick</dfn> lifts the binding pin. When the gap between its key pin and driver pin reaches the shear line, the plug turns slightly further. The driver pin is now caught on the top of the plug, above the shear line, and the key pin drops back down. The pin is <dfn>set</dfn>.</p>
+        <p>The small extra turn makes a different pin bind.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Single pin picking</h2>
+        <p>The process repeats: find the binding pin, lift it until it sets, then move to the next. This is called <dfn>single pin picking</dfn>.</p>
+        <p>When the last pin sets, nothing crosses the shear line and the plug turns, exactly as it would with the key.</p>
+        <p class="caption">The order is set by the drilling errors, not by the position of the pins.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Raking</h2>
+        <p><dfn>Raking</dfn> uses a pick with a wavy edge, called a <dfn data-part="rake">rake</dfn>, which is moved quickly in and out of the keyway while tension is held. The pins bounce up and down, and some set by chance when their gap passes the shear line at the right moment.</p>
+        <p>Raking is faster than single pin picking but less reliable. It often sets only some of the pins.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Security pins</h2>
+        <p>Many locks use <dfn>security pins</dfn> to make picking harder. A <dfn data-part="spool">spool pin</dfn> is a driver pin with a narrow waist. When the waist reaches the shear line, the plug turns further than usual. This is a <dfn>false set</dfn>: it feels as if a pin has set, but the plug is still blocked.</p>
+        <p>To get past it, the spool pin is lifted further while the tension is eased, which lets the plug turn back slightly (<dfn>counter-rotation</dfn>). Other security pins include serrated pins, which catch at many heights.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Keyspace</h2>
+        <p>The number of different keys a lock design allows is its <dfn>keyspace</dfn>. With 5 pins and 5 possible depths there are 5<sup>5</sup> = 3,125 combinations. Common locks have 5 or 6 pins and between 6 and 10 depths.</p>
+        <p>The usable number is lower, because some combinations are avoided, such as a very deep cut next to a very shallow one, which would weaken the key. Picking does not depend on the keyspace at all, since it never reproduces the key.</p>
+      </section>
+
+      <section data-step class="step">
         <h2>Summary</h2>
         <ul>
           <li>The plug turns only when nothing crosses the shear line.</li>
@@ -245,6 +315,8 @@
           <li>The correct key lifts every pin stack so that the gap between key pin and driver pin is on the shear line.</li>
           <li>One wrong cut is enough to keep the lock shut.</li>
           <li>Turning the plug turns a cam, which moves the latch and frees the shackle.</li>
+          <li>Picking works because the pin chambers are slightly out of line: under tension, one pin binds at a time and can be set.</li>
+          <li>Security pins such as spools add false sets to make picking harder.</li>
         </ul>
       </section>
     </div>
@@ -252,15 +324,11 @@
 
   <div class="after">
     <div class="note">
-      <h3>Planned expansion: basic lockpicking principles</h3>
-      <p>The next sections will continue from the shear line model above:</p>
+      <h3>Planned expansion</h3>
       <ul>
-        <li><b>Manufacturing tolerances.</b> Pin chambers are never drilled in a perfectly straight line.</li>
-        <li><b>Tension and binding.</b> Light turning pressure on the plug makes one driver pin bind before the others.</li>
-        <li><b>Setting pins.</b> Lifting the binding pin to the shear line lets the plug turn slightly and makes the next pin bind.</li>
-        <li><b>Raking.</b> Moving many pins quickly instead of one at a time.</li>
-        <li><b>Security pins.</b> Spool and serrated driver pins, which cause false sets.</li>
-        <li><b>Keyspace.</b> The number of possible keys, and why the practical number is lower.</li>
+        <li><b>Master keying.</b> Extra pins create two shear points, so two different keys open the same lock.</li>
+        <li><b>Bumping and impressioning.</b> Other ways of opening a lock without its key.</li>
+        <li><b>Other designs.</b> Wafer, disc detainer and lever locks, and how picking differs for each.</li>
       </ul>
     </div>
     <p class="caption">Diagrams are simplified. Real locks have more parts, and pin lengths and gaps are exaggerated here for clarity.</p>

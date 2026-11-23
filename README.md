@@ -63,21 +63,17 @@ also works: `python3 -m http.server` then visit http://localhost:8000.
 
 ## Planned expansion
 
-### Pin tumbler lock: basic lockpicking principles
+### Pin tumbler lock: next sections
 
-Continue the page downwards from the shear line model:
+Lockpicking basics (tolerances, tension and binding, setting pins, single pin
+picking, raking, security pins, keyspace) are now part of the page. Next:
 
-- Manufacturing tolerances: pin chambers are not perfectly aligned.
-- Tension and binding: light turning pressure makes one driver pin bind first.
-- Setting pins: lifting the binding pin to the shear line lets the plug turn
-  slightly, and the next pin binds.
-- Raking: moving many pins quickly instead of one at a time.
-- Security pins: spool and serrated drivers, false sets.
-- Keyspace: number of possible keys, and practical limits.
+- Master keying: master wafers create two shear points per chamber.
+- Bumping and impressioning.
+- How picking differs for wafer, disc detainer and lever locks.
 
 ### Other ideas
 
 - Other lock types: wafer, disc detainer, lever tumbler.
-- Master keying (master wafers create two shear points per chamber).
 - A key-cutting sandbox at the end of the page: set cut depths and test the lock.
 - Chapter navigation dots and links to individual scenes.

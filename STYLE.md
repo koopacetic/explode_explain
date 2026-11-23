@@ -109,6 +109,10 @@ reserved for the concept being tested and should not be used for materials.
 - **Two views beat one** when a motion is hard to read: the lock uses a
   lengthwise section (where pin heights are clear) and an end section (where
   rotation is clear), driven by the same values.
+- **Drive the drawing from a small model** when the concept is a rule, not
+  just a motion. The picking steps compute which pin binds from the chamber
+  offsets, so the highlighted pin, the plug travel and the order of setting
+  always agree.
 - **Rotation seen side-on** is drawn as a projection: scale the moving contents
   vertically by `cos(angle)` around the axis.
 - **Status outlines**: a part that causes a failure gets a red stroke (3px at
