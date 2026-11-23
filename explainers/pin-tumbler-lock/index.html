@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pin tumbler lock</title>
+  <meta name="description" content="How a pin tumbler lock works, explained step by step with diagrams.">
+  <link rel="stylesheet" href="../../shared/explainer.css">
+  <link rel="stylesheet" href="padlock.css">
+  <link rel="stylesheet" href="lock.css">
+</head>
+<body>
+  <div class="progress"></div>
+  <nav class="topbar"><a href="../../index.html">&larr; All explainers</a></nav>
+
+  <main class="explainer">
+
+    <!-- ===== Stage: drawings that change as the page scrolls ===== -->
+    <div class="stage" aria-hidden="true">
+
+      <!-- 3D padlock built from flat CSS-transformed layers -->
+      <div class="view3d" id="view3d">
+        <div class="floor-shadow" id="floor"></div>
+        <div id="lock3d"></div>
+      </div>
+
+      <!-- 2D cross-sections of the cylinder -->
+      <svg class="section" id="section" viewBox="40 90 940 450" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="g-plug" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#cfa651"/>
+            <stop offset="1" stop-color="#9c7a34"/>
+          </linearGradient>
+          <linearGradient id="g-housing" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#7d8896"/>
+            <stop offset="1" stop-color="#5b6572"/>
+          </linearGradient>
+          <linearGradient id="g-keypin" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#b58a2e"/>
+            <stop offset="0.45" stop-color="#ecc86d"/>
+            <stop offset="1" stop-color="#a87f2a"/>
+          </linearGradient>
+          <linearGradient id="g-driver" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#8e99a5"/>
+            <stop offset="0.45" stop-color="#dde4ea"/>
+            <stop offset="1" stop-color="#87929e"/>
+          </linearGradient>
+          <linearGradient id="g-key" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#e6dcb6"/>
+            <stop offset="1" stop-color="#b9ad84"/>
+          </linearGradient>
+
+          <!-- Hatching marks cut surfaces, as in engineering drawings.
+               Different angles tell the housing and the plug apart. -->
+          <pattern id="hatch-housing" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="9" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
+          </pattern>
+          <pattern id="hatch-plug" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+            <line x1="0" y1="0" x2="0" y2="9" stroke="rgba(90,55,10,0.35)" stroke-width="1.5"/>
+          </pattern>
+
+          <!-- Soft glow for the shear line, and for parts named in hovered text -->
+          <filter id="glow" x="-20%" y="-200%" width="140%" height="500%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glow-lit" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#f3d27a" flood-opacity="1"/>
+            <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#e2b955" flood-opacity="0.7"/>
+          </filter>
+        </defs>
+
+        <!-- Lengthwise section (left) -->
+        <g id="side">
+          <rect class="part-housing" x="50" y="110" width="550" height="300" rx="8" fill="url(#g-housing)"/>
+          <rect x="50" y="110" width="550" height="300" rx="8" fill="url(#hatch-housing)"/>
+          <g id="side-chambers" class="part-chamber"></g>
+          <rect class="part-plug" x="50" y="260" width="530" height="120" fill="url(#g-plug)"/>
+          <g id="side-plug-contents">
+            <rect x="50" y="260" width="530" height="120" fill="url(#hatch-plug)"/>
+            <rect class="part-keyway" x="50" y="290" width="520" height="72" fill="#343a42"/>
+            <g id="side-plug-chambers" class="part-chamber"></g>
+            <g id="side-key" class="part-key"></g>
+            <g id="side-keypins"></g>
+          </g>
+          <g id="side-drivers"></g>
+          <g id="side-springs"></g>
+          <g id="side-shear" class="part-shear" filter="url(#glow)"></g>
+          <g id="side-bitting" class="lbl"></g>
+          <text class="cap" x="325" y="520" text-anchor="middle">Lengthwise section</text>
+        </g>
+
+        <!-- End section (right): the cylinder seen from the front, through pin 3 -->
+        <g id="end">
+          <g class="part-housing">
+            <rect x="775" y="110" width="70" height="200" rx="6" fill="url(#g-housing)"/>
+            <circle cx="810" cy="320" r="92" fill="url(#g-housing)"/>
+          </g>
+          <rect x="775" y="110" width="70" height="200" rx="6" fill="url(#hatch-housing)"/>
+          <circle cx="810" cy="320" r="92" fill="url(#hatch-housing)"/>
+          <rect class="part-chamber" x="797" y="130" width="26" height="130" fill="#262c33"/>
+          <g id="end-plug">
+            <circle class="part-plug" cx="810" cy="320" r="60" fill="url(#g-plug)"/>
+            <circle cx="810" cy="320" r="60" fill="url(#hatch-plug)"/>
+            <rect class="part-chamber" x="797" y="260" width="26" height="40" fill="#262c33"/>
+            <path class="part-keyway" d="M803 290 h14 v18 l-4 6 l4 6 v18 l-4 6 v18 h-10 v-16 l-4 -6 l4 -6 v-16 l-4 -6 z" fill="#2a2f35"/>
+            <g id="end-key" class="part-key"></g>
+            <g id="end-keypin"></g>
+          </g>
+          <g id="end-driver"></g>
+          <g id="end-spring"></g>
+          <circle id="end-shear" class="part-shear" cx="810" cy="320" r="60" fill="none" stroke="#e2b955" stroke-width="2.5" filter="url(#glow)"/>
+          <text class="cap" x="810" y="520" text-anchor="middle">End section (pin 3)</text>
+        </g>
+
+        <!-- Labels -->
+        <g id="lbl-parts" class="lbl">
+          <text x="612" y="190">Housing</text>
+          <text x="612" y="330">Plug</text>
+          <text x="58" y="398" class="small">Keyway</text>
+        </g>
+        <g id="lbl-shear" class="lbl">
+          <text x="612" y="265" class="accent">Shear line</text>
+        </g>
+        <g id="lbl-pins" class="lbl">
+          <line x1="826" y1="175" x2="880" y2="175"/><text x="886" y="180">Spring</text>
+          <line x1="826" y1="232" x2="880" y2="232"/><text x="886" y="237">Driver pin</text>
+          <line x1="826" y1="282" x2="880" y2="282"/><text x="886" y="287">Key pin</text>
+        </g>
+      </svg>
+
+      <!-- Colour key for the sections -->
+      <div class="legend" id="legend">
+        <span><i class="sw sw-brass"></i>Turns with the plug</span>
+        <span><i class="sw sw-steel"></i>Stays in the housing</span>
+      </div>
+    </div>
+
+    <!-- ===== Text: one <section data-step> per scene =====
+         Terms marked data-part light up the matching part of the drawing on hover. -->
+    <div class="steps">
+
+      <section data-step class="step hero">
+        <h1>Pin tumbler lock</h1>
+        <p>A <dfn>pin tumbler lock</dfn> is a lock mechanism that uses pins of different lengths to stop the lock from opening unless the correct key is inserted. It is the most common type of lock in door locks and padlocks.</p>
+        <table class="infobox">
+          <tr><th>Type</th><td>Mechanical lock</td></tr>
+          <tr><th>Early form</th><td>Wooden pin locks, ancient Egypt</td></tr>
+          <tr><th>Modern form</th><td>Linus Yale Sr. (1848); Linus Yale Jr. (1861, flat key)</td></tr>
+          <tr><th>Related</th><td>Wafer tumbler lock, disc tumbler lock, lever tumbler lock</td></tr>
+        </table>
+        <div class="scroll-cue">Scroll to take the lock apart<span class="chevron"></span></div>
+      </section>
+
+      <section data-step class="step">
+        <h2>Purpose</h2>
+        <p>A lock prevents one specific movement. In a padlock, that movement is the <dfn data-part="shackle">shackle</dfn> (the U-shaped bar) being pulled out of the body.</p>
+        <p>Inside the body, a latch holds the shackle in place. The latch can only be moved by turning the cylinder, and the cylinder can only be turned by the correct key.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Components</h2>
+        <p>A basic padlock has five main parts:</p>
+        <ul>
+          <li><dfn data-part="body">Body</dfn>: the outer case.</li>
+          <li><dfn data-part="shackle">Shackle</dfn>: the bar that loops through whatever is being locked.</li>
+          <li><dfn data-part="latch">Latch</dfn>: a bar that fits into a notch in the shackle.</li>
+          <li><dfn data-part="cylinder">Cylinder</dfn>: the part the key goes into.</li>
+          <li><dfn data-part="pins">Pins</dfn>: small rods inside the cylinder that decide which key will work.</li>
+        </ul>
+        <p>The rest of this article is about the cylinder, where the key is checked.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Cylinder</h2>
+        <p>The cylinder has two parts. The <dfn data-part="plug">plug</dfn> is a cylinder that can rotate. The <dfn data-part="housing">housing</dfn> (or shell) is fixed and surrounds the plug.</p>
+        <p>The key goes into a slot in the plug called the <dfn data-part="keyway">keyway</dfn>. Turning the key turns the plug.</p>
+        <p class="caption">Left: the cylinder cut along its length. Right: the cylinder cut across, seen from the front. Hatching marks cut surfaces.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Shear line</h2>
+        <p>The narrow gap between the plug and the housing is called the <dfn data-part="shear">shear line</dfn>.</p>
+        <p>If nothing crosses the shear line, the plug turns freely. The whole job of the lock is to keep something across this line unless the correct key is present.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Pin stacks</h2>
+        <p>A row of holes, called <dfn data-part="chamber">pin chambers</dfn>, is drilled down through the housing and into the plug. Each chamber holds a stack of three parts:</p>
+        <ol>
+          <li><dfn data-part="keypin">Key pin</dfn>: touches the key. Key pins have different lengths.</li>
+          <li><dfn data-part="driver">Driver pin</dfn>: sits on top of the key pin. Driver pins are usually all the same length.</li>
+          <li><dfn data-part="spring">Spring</dfn>: pushes both pins down.</li>
+        </ol>
+        <p>Most household locks have five or six pin stacks.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Locked state</h2>
+        <p>With no key inserted, the springs push each stack down as far as it will go. Every <dfn data-part="driver">driver pin</dfn> then sits partly in the housing and partly in the plug, across the shear line.</p>
+        <p>The driver pins hold the plug to the housing, so the plug cannot turn. A single driver pin across the shear line is enough to block it.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Inserting the key</h2>
+        <p>The top edge of the <dfn data-part="key">key</dfn> has a series of notches, called <dfn>cuts</dfn>. As the key slides in, the slopes between the cuts push the pins up, and the springs push them back down.</p>
+        <p>The pins rise and fall several times before the key is fully inserted.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Bitting</h2>
+        <p>The depths of the cuts are called the <dfn>bitting</dfn>. It is usually written as a number, one digit per cut. The key shown here has bitting 3-1-4-2-5, where higher numbers are deeper cuts.</p>
+        <p>Each cut depth matches the length of the <dfn data-part="keypin">key pin</dfn> above it. When the key is fully inserted, the top of every key pin lines up exactly with the shear line. The gaps between key pins and driver pins all fall on the shear line at the same time.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Turning</h2>
+        <p>With every gap on the shear line, nothing connects the plug to the housing, and the plug can turn.</p>
+        <p>The key pins turn with the plug. The driver pins stay in the housing, held up by the outer surface of the plug.</p>
+        <p class="caption">In the lengthwise section, the key appears as a thin line once it has turned, because it is then seen edge-on.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Incorrect key</h2>
+        <p>If any cut is the wrong depth, its pin stack does not line up with the shear line:</p>
+        <ul>
+          <li>A cut that is too <b>shallow</b> lifts the key pin across the shear line.</li>
+          <li>A cut that is too <b>deep</b> leaves the driver pin across the shear line.</li>
+        </ul>
+        <p>This key has bitting 3-1-<b>2</b>-2-5. Its third cut is too shallow, so the third key pin blocks the plug. The other four pins are correct, but the lock still does not open.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Releasing the shackle</h2>
+        <p>A <dfn data-part="cam">cam</dfn> is fixed to the back of the plug. Here it is a short lever with a pin at its tip. The pin sits in a slot in an arm attached to the <dfn data-part="latch">latch</dfn>.</p>
+        <p>As the plug turns, the cam pin swings sideways and pulls the latch out of the notch in the shackle. A spring then pushes the shackle up. Padlocks use several latch designs, such as ball bearings or spring-loaded bars, but the cylinder works the same way in each.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Summary</h2>
+        <ul>
+          <li>The plug turns only when nothing crosses the shear line.</li>
+          <li>Each chamber holds a key pin, a driver pin and a spring.</li>
+          <li>Without a key, driver pins cross the shear line and block the plug.</li>
+          <li>The correct key lifts every pin stack so that the gap between key pin and driver pin is on the shear line.</li>
+          <li>One wrong cut is enough to keep the lock shut.</li>
+          <li>Turning the plug turns a cam, which moves the latch and frees the shackle.</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <div class="after">
+    <div class="note">
+      <h3>Planned expansion: basic lockpicking principles</h3>
+      <p>The next sections will continue from the shear line model above:</p>
+      <ul>
+        <li><b>Manufacturing tolerances.</b> Pin chambers are never drilled in a perfectly straight line.</li>
+        <li><b>Tension and binding.</b> Light turning pressure on the plug makes one driver pin bind before the others.</li>
+        <li><b>Setting pins.</b> Lifting the binding pin to the shear line lets the plug turn slightly and makes the next pin bind.</li>
+        <li><b>Raking.</b> Moving many pins quickly instead of one at a time.</li>
+        <li><b>Security pins.</b> Spool and serrated driver pins, which cause false sets.</li>
+        <li><b>Keyspace.</b> The number of possible keys, and why the practical number is lower.</li>
+      </ul>
+    </div>
+    <p class="caption">Diagrams are simplified. Real locks have more parts, and pin lengths and gaps are exaggerated here for clarity.</p>
+  </div>
+
+  <script src="../../shared/explainer.js"></script>
+  <script src="padlock.js"></script>
+  <script src="scenes.js"></script>
+</body>
+</html>

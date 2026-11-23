@@ -1,0 +1,75 @@
+/* Styles specific to the pin tumbler lock explainer. */
+
+/* ---------- 3D padlock ---------- */
+
+.view3d {
+  position: absolute;
+  inset: 0;
+  perspective: 1400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- 2D sections ---------- */
+
+.section {
+  position: absolute;
+  inset: 4% 3%;
+  width: 94%;
+  height: 92%;
+  opacity: 0;
+}
+
+.section text {
+  fill: var(--text);
+  font: 17px var(--sans);
+}
+.section text.small { font-size: 13px; fill: #c7ced6; }
+.section text.cap { fill: var(--muted); font-size: 15px; }
+.section text.accent { fill: var(--accent); }
+.section .lbl line { stroke: var(--muted); stroke-width: 1; }
+.section .bit { font: 600 20px var(--sans); }
+.section .bit.bad { fill: var(--bad); }
+
+/* Parts named in hovered text glow (SVG filter, works on SVG elements) */
+.section .is-lit { filter: url(#glow-lit); }
+
+/* ---------- 3D floor shadow ---------- */
+
+.floor-shadow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 300px;
+  height: 40px;
+  margin: -20px 0 0 -150px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.5), transparent 70%);
+  pointer-events: none;
+}
+
+/* ---------- Colour key ---------- */
+
+.legend {
+  position: absolute;
+  left: 4%;
+  bottom: 4%;
+  display: flex;
+  gap: 1.2rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  opacity: 0;
+}
+.legend span { display: flex; align-items: center; gap: 0.45rem; }
+.legend .sw {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+.sw-brass { background: linear-gradient(180deg, #ecc86d, #b58a2e); }
+.sw-steel { background: linear-gradient(180deg, #dde4ea, #87929e); }
+
+@media (max-width: 800px) {
+  .legend { bottom: 2.8rem; font-size: 0.7rem; gap: 0.8rem; }
+}

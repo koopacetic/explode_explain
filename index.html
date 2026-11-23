@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Explainers</title>
+  <meta name="description" content="Long-form pages that build up one concept at a time, with drawings that change as you scroll.">
+  <link rel="stylesheet" href="shared/explainer.css">
+  <link rel="stylesheet" href="shared/gallery.css">
+  <!-- Card heroes: each explainer's padlock/diagram code and its hero.js -->
+  <link rel="stylesheet" href="explainers/pin-tumbler-lock/padlock.css">
+</head>
+<body>
+  <main class="gallery">
+    <header class="masthead">
+      <span class="kicker">Explode &middot; Explain</span>
+      <p>Long-form pages that build up a single concept from first principles. The drawings change as you scroll, so each step is shown as it is explained.</p>
+    </header>
+
+    <section class="cards">
+      <!-- To add an explainer: copy a card, set href, data-hero (the folder name), title, text and tags. -->
+      <a class="card" href="explainers/pin-tumbler-lock/index.html">
+        <div class="card-stage" data-hero="pin-tumbler-lock"></div>
+        <div class="card-body">
+          <h2>Pin tumbler lock</h2>
+          <p>How a key opens a common door lock or padlock, and why the wrong key does not.</p>
+          <div class="tags"><span class="tag">Mechanism</span><span class="tag">13 steps</span></div>
+        </div>
+      </a>
+
+      <div class="card soon" aria-hidden="true">
+        <div class="card-stage">?</div>
+        <div class="card-body">
+          <h2>Next explainer</h2>
+          <p>In preparation.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">Plain HTML, CSS and JavaScript. No tracking, no build step.</footer>
+  </main>
+
+  <script src="explainers/pin-tumbler-lock/padlock.js"></script>
+  <script src="explainers/pin-tumbler-lock/hero.js"></script>
+  <script>
+    // Start each card's hero animation and run them all in one loop.
+    (function () {
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var items = [];
+      document.querySelectorAll("[data-hero]").forEach(function (stage) {
+        var make = (window.ExplainerHeroes || {})[stage.dataset.hero];
+        if (!make) return;
+        var card = stage.closest(".card");
+        var item = { update: make(stage), hover: false };
+        card.addEventListener("mouseenter", function () { item.hover = true; });
+        card.addEventListener("mouseleave", function () { item.hover = false; });
+        card.addEventListener("focus", function () { item.hover = true; });
+        card.addEventListener("blur", function () { item.hover = false; });
+        items.push(item);
+      });
+      var last = performance.now();
+      function frame(now) {
+        var dt = reduce ? 0 : Math.min(0.1, (now - last) / 1000);
+        last = now;
+        items.forEach(function (it) { it.update(dt, it.hover); });
+        requestAnimationFrame(frame);
+      }
+      frame(last);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Topic name</title>
+  <!-- Paths assume this folder is copied to explainers/<topic-name>/ -->
+  <link rel="stylesheet" href="../../shared/explainer.css">
+</head>
+<body>
+  <div class="progress"></div>
+  <nav class="topbar"><a href="../../index.html">&larr; All explainers</a></nav>
+
+  <main class="explainer">
+    <div class="stage" aria-hidden="true">
+      <svg id="drawing" viewBox="0 0 1000 560" style="width:100%;height:100%">
+        <circle id="dot" cx="500" cy="280" r="40" fill="#e2b955"/>
+      </svg>
+    </div>
+
+    <div class="steps">
+      <section data-step class="step">
+        <h1>Topic name</h1>
+        <p>One-paragraph definition of the topic.</p>
+      </section>
+      <section data-step class="step">
+        <h2>First idea</h2>
+        <p>Text for the first scene.</p>
+      </section>
+      <section data-step class="step">
+        <h2>Second idea</h2>
+        <p>Text for the second scene.</p>
+      </section>
+    </div>
+  </main>
+
+  <script src="../../shared/explainer.js"></script>
+  <script>
+    // Draw everything as a function of t (step index + progress through step).
+    var E = Explainer;
+    var dot = document.getElementById("dot");
+    E.start(function (t) {
+      dot.setAttribute("cx", E.lerp(200, 800, E.ease(E.range(t, 1, 2))));
+      dot.setAttribute("r", 40 + 40 * E.ease(E.range(t, 2, 2.6)));
+    });
+  </script>
+</body>
+</html>

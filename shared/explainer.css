@@ -1,0 +1,309 @@
+/* Shared theme and layout for all explainers.
+   Slate background with a soft spotlight behind the stage and the text. */
+
+:root {
+  --bg-deep: #1c2026;
+  --bg-mid: #2e353e;
+  --bg-light: #4f5a66;
+  --text: #e4e8ec;
+  --muted: #9aa4af;
+  --rule: rgba(255, 255, 255, 0.12);
+  --accent: #e2b955;
+  --ok: #7fd49b;
+  --bad: #ee6b6b;
+  --link: #9cc3ef;
+  --serif: "Linux Libertine", "Georgia", "Times New Roman", serif;
+  --sans: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --text-col: 30rem;
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--bg-deep); }
+
+body {
+  margin: 0;
+  color: var(--text);
+  font: 17px/1.65 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Fixed background: dark slate with two soft pools of light. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 45% 55% at 66% 48%, rgba(120, 135, 150, 0.45), transparent 70%),
+    radial-gradient(ellipse 30% 60% at 18% 50%, rgba(110, 122, 136, 0.22), transparent 70%),
+    linear-gradient(180deg, var(--bg-mid), var(--bg-deep));
+}
+
+a { color: var(--link); }
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: normal;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 2.4rem;
+  margin: 0 0 0.4rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+h2 {
+  font-size: 1.55rem;
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+p { margin: 0 0 0.9rem; }
+
+dfn { font-style: normal; font-weight: 600; }
+
+/* Terms that light up a part of the drawing */
+dfn[data-part] {
+  cursor: help;
+  border-bottom: 1px dotted rgba(226, 185, 85, 0.7);
+  transition: color 0.2s;
+}
+dfn[data-part]:hover, dfn[data-part]:focus {
+  color: var(--accent);
+  outline: none;
+}
+
+/* ---------- Top bar and progress ---------- */
+
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.topbar a { color: var(--muted); text-decoration: none; }
+.topbar a:hover { color: var(--text); }
+
+.progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0;
+  z-index: 11;
+  background: var(--accent);
+  opacity: 0.7;
+}
+
+/* ---------- Two-column scrollytelling layout ---------- */
+
+.explainer {
+  display: grid;
+  grid-template-columns: minmax(18rem, var(--text-col)) 1fr;
+}
+
+.stage {
+  grid-column: 2;
+  grid-row: 1;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.steps {
+  grid-column: 1;
+  grid-row: 1;
+  padding: 0 1.5rem 0 2.5rem;
+}
+
+.step {
+  /* Each step needs some scroll length to drive its animation, but not a
+     full screen: 60% keeps neighbouring text blocks close together. */
+  min-height: 60vh;
+  min-height: 60svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.5rem 0;
+  opacity: 0.25;
+  transition: opacity 0.4s;
+}
+
+.step.is-active { opacity: 1; }
+
+.step.hero { min-height: 100vh; min-height: 100svh; position: relative; }
+
+/* "Scroll to begin" cue at the bottom of the first screen */
+.scroll-cue {
+  position: absolute;
+  left: 0;
+  bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.scroll-cue .chevron {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  animation: cue-bounce 1.6s ease-in-out infinite;
+}
+@keyframes cue-bounce {
+  0%, 100% { transform: translateY(-3px) rotate(45deg); opacity: 0.5; }
+  50% { transform: translateY(4px) rotate(45deg); opacity: 1; }
+}
+
+/* ---------- Chapter rail ---------- */
+
+.rail {
+  position: fixed;
+  right: 1.1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.rail button {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s, border-color 0.3s;
+}
+.rail button:hover { border-color: var(--accent); }
+.rail button.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.3);
+}
+.rail button::after {
+  content: attr(data-label);
+  position: absolute;
+  right: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font: 0.8rem var(--sans);
+  color: var(--text);
+  background: rgba(20, 24, 29, 0.9);
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.rail button:hover::after, .rail button:focus-visible::after { opacity: 1; }
+
+.step .caption {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.step ul, .step ol { margin: 0 0 0.9rem; padding-left: 1.3rem; }
+.step li { margin-bottom: 0.25rem; }
+
+.scroll-hint {
+  margin-top: 1.5rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* Wikipedia-style infobox */
+.infobox {
+  font-size: 0.85rem;
+  border: 1px solid var(--rule);
+  background: rgba(0, 0, 0, 0.15);
+  border-collapse: collapse;
+  margin: 0.5rem 0 1rem;
+  width: 100%;
+}
+.infobox th, .infobox td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.3rem 0.6rem;
+  border-top: 1px solid var(--rule);
+}
+.infobox th { color: var(--muted); font-weight: normal; width: 35%; }
+
+/* ---------- Footer notes (outside the scroll steps) ---------- */
+
+.after {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 6rem;
+}
+
+.note {
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  background: rgba(0, 0, 0, 0.18);
+  padding: 1rem 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.note h3 { margin: 0 0 0.5rem; font-size: 1.15rem; }
+
+/* ---------- Narrow screens ----------
+   The drawing stays fixed in the top half. Text scrolls up from below and
+   slides under the drawing, fading out at its lower edge, so the only text
+   visible is in the lower half, next to the scene it describes. */
+
+@media (max-width: 800px) {
+  .explainer { display: block; }
+  .stage {
+    position: sticky;
+    top: 0;
+    height: 50vh;
+    height: 50svh;
+    z-index: 2;
+    /* Opaque, with a soft fade at the bottom edge for text passing under it */
+    background:
+      radial-gradient(ellipse 80% 70% at 50% 45%, rgba(120, 135, 150, 0.35), transparent 75%),
+      linear-gradient(180deg, var(--bg-mid), #283038);
+    -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 2.5rem), transparent);
+    mask-image: linear-gradient(180deg, #000 calc(100% - 2.5rem), transparent);
+  }
+  .steps { position: relative; z-index: 1; padding: 0 1.25rem; }
+  .step {
+    min-height: 50vh;
+    min-height: 50svh;
+    justify-content: center;
+    padding: 1rem 0;
+    opacity: 0.15;
+  }
+  .step.is-active { opacity: 1; }
+  .step.hero {
+    min-height: 50vh;
+    min-height: 50svh;
+    padding-bottom: 3.5rem;
+  }
+  .scroll-cue { bottom: 1rem; }
+  .rail { display: none; }
+  .topbar { z-index: 12; }
+  h1 { font-size: 1.9rem; }
+  .infobox { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step { transition: none; }
+}
