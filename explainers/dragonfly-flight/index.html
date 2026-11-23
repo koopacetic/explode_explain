@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How a dragonfly flies</title>
+  <meta name="description" content="How a dragonfly hovers and flies with four independently driven wings: tilted strokes, wing flips, the leading-edge vortex and the timing between forewings and hindwings, explained step by step with diagrams.">
+  <link rel="stylesheet" href="../../shared/explainer.css">
+  <link rel="stylesheet" href="flight.css">
+</head>
+<body>
+  <div class="progress"></div>
+  <nav class="topbar"><a href="../../index.html">&larr; All explainers</a></nav>
+
+  <main class="explainer">
+
+    <!-- ===== Stage: one SVG, built in scenes.js ===== -->
+    <div class="stage" aria-hidden="true">
+      <svg class="drawing" id="drawing" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid meet"></svg>
+
+      <!-- Colour key; each entry lists the steps where it applies -->
+      <div class="legend" id="legend">
+        <span data-steps="0-13"><i class="sw sw-wing"></i>Wing (moves)</span>
+        <span data-steps="0,8-10,13"><i class="sw sw-body"></i>Body (fixed)</span>
+        <span data-steps="1-7,11"><i class="sw sw-air"></i>Air</span>
+        <span data-steps="8"><i class="sw sw-muscle"></i>Muscle</span>
+        <span data-steps="3-7"><i class="sw sw-force"></i>Net force over one beat</span>
+      </div>
+    </div>
+
+    <!-- ===== Text: one <section data-step> per scene ===== -->
+    <div class="steps">
+
+      <section data-step class="step hero">
+        <h1>How a dragonfly flies</h1>
+        <p><dfn>Dragonflies</dfn> fly with two pairs of wings, each driven by its own muscles. The wings beat back and forth about thirty times a second along a tilted path, flipping over at the end of every stroke. Because each <dfn data-part="forewing">forewing</dfn> and <dfn data-part="hindwing">hindwing</dfn> can be timed separately, a dragonfly can hover, fly backwards and turn sharply.</p>
+        <p>This page builds up how a beating wing holds the insect in the air, starting from a flat plate in moving air.</p>
+        <table class="infobox">
+          <tr><th>Group</th><td>Order Odonata, suborder Anisoptera</td></tr>
+          <tr><th>Wingbeat</th><td>Roughly 20&ndash;40 beats per second, depending on species</td></tr>
+          <tr><th>Muscles</th><td>Direct flight muscles, one contraction per nerve impulse</td></tr>
+          <tr><th>Hover stroke</th><td>Stroke plane tilted about 60&deg; from horizontal</td></tr>
+          <tr><th>Wing timing</th><td>Hindwings lead the forewings; the lead changes with the task</td></tr>
+          <tr><th>Related</th><td>Insect flight, angle of attack, stall, hummingbird hovering</td></tr>
+        </table>
+        <div class="scroll-cue">Scroll to slow the wings down<span class="chevron"></span></div>
+      </section>
+
+      <section data-step class="step">
+        <h2>A plate in moving air</h2>
+        <p>The drawing is a cut through one forewing, seen from the side, with the head to the left. The cut face is the <dfn data-part="chord">chord</dfn>: the line from the <dfn data-part="le">leading edge</dfn> to the trailing edge.</p>
+        <p>When the wing moves through air, the air pushes back on it. The push is split into two parts. <dfn data-part="lift">Lift</dfn> acts at right angles to the motion; <dfn data-part="drag">drag</dfn> acts against the motion.</p>
+        <p class="caption">The wing is drawn still, with the air streaming past it, which gives the same forces.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Angle of attack and stall</h2>
+        <p>The angle between the chord and the direction of motion is the <dfn>angle of attack</dfn>. Tilting the wing up turns more of the passing air downwards, and lift grows.</p>
+        <p>Past about 15&deg; the air can no longer follow the upper surface. It breaks away in a turbulent wake, lift collapses and drag rises. This is a <dfn data-part="stall">stall</dfn>. An aircraft wing in steady flight stays well below this angle.</p>
+        <p class="caption">The graph shows the lift of a wing held steady in a stream. Values are illustrative.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Flapping back and forth</h2>
+        <p>A hovering insect has no forward speed, so its wings must make their own airflow. Each wing sweeps forward and back along a <dfn data-part="plane">stroke plane</dfn>. The forward sweep is the <dfn>downstroke</dfn>, the return the <dfn>upstroke</dfn>.</p>
+        <p>If the wing kept the same tilt on the way back, it would move trailing edge first and push the opposite way. Lift on the downstroke would be cancelled by downward lift on the upstroke, and the net force over one beat would be close to zero.</p>
+        <p class="caption">A horizontal stroke plane is shown first, as used by hovering hummingbirds and many insects.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Flipping at each end</h2>
+        <p>Insects avoid this by rotating each wing at the ends of the stroke. Before the downstroke the wing twists leading edge down, called <dfn data-part="pron">pronation</dfn>; before the upstroke it twists the other way, called <dfn data-part="sup">supination</dfn>.</p>
+        <p>The <dfn data-part="le">leading edge</dfn> now leads in both directions, and both half-strokes push the air down. The net force over one beat points straight up.</p>
+        <p class="caption">The faint outlines show the wing at evenly spaced moments of one beat.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>The leading-edge vortex</h2>
+        <p>Flapping wings work at angles of attack far beyond the stall angle of a steady wing. As the wing starts each stroke, air flowing round the leading edge rolls up into a swirl above the wing, the <dfn data-part="lev">leading-edge vortex</dfn>.</p>
+        <p>The vortex is a region of low pressure that stays attached to the upper surface for the short length of one stroke, so the wing does not stall. This <dfn>delayed stall</dfn> lets a flapping wing make much more force than the same wing held steady.</p>
+        <p class="caption">A real leading-edge vortex is a three-dimensional spiral that runs along the wing. The drawing shows its cross-section.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>A tilted stroke</h2>
+        <p>A hovering dragonfly does not beat along a horizontal plane. Its <dfn data-part="plane">stroke plane</dfn> is tilted at about 60&deg;, so the downstroke runs down and forward and the upstroke up and back.</p>
+        <p>The two half-strokes are also different. On the downstroke the wing meets the air at a steep angle, about 60&ndash;70&deg;, and pushes hard. On the upstroke it is nearly edge-on and slices through with little force.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Held up by drag</h2>
+        <p>Adding the forces over one beat: the strong <dfn data-part="fdown">downstroke force</dfn> points up and slightly back, the weak <dfn data-part="fup">upstroke force</dfn> points forward, and together they give a <dfn data-part="net">net force</dfn> pointing straight up, balancing the insect's <dfn data-part="weight">weight</dfn>.</p>
+        <p>Because the downstroke runs steeply downwards, much of the upward push is drag, not lift. In a computer model of a hovering dragonfly, drag supplied about three quarters of the upward force. This simple model gives a similar share, shown under the arrows.</p>
+        <p class="caption">Quasi-steady model with force coefficients from Wang (2004). Real flows add effects from the wake and wing rotation.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Direct flight muscles</h2>
+        <p>The drawing changes to a cross-section through the thorax, seen from the front. Each wing rests on a pivot, the <dfn data-part="fulcrum">pleural fulcrum</dfn>, at the top of the side wall.</p>
+        <p>Muscles attached directly to the wing base pull on either side of the pivot. An <dfn data-part="elev">elevator muscle</dfn>, attached inside the pivot, pulls the base down and raises the wing. A <dfn data-part="depr">depressor muscle</dfn>, attached outside it, lowers the wing. The pivot works as a lever: a short pull at the base gives a large sweep at the tip.</p>
+        <p>These <dfn>direct flight muscles</dfn> contract once for each nerve impulse. Most other flying insects, such as flies and bees, instead deform the whole thorax with indirect muscles.</p>
+        <p class="caption">Simplified. Each wing has several elevator and depressor muscles, which also twist the wing.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Four wings, four drives</h2>
+        <p>Each of the four wings has its own set of muscles. The nervous system can change the timing, the sweep and the angle of each wing separately.</p>
+        <p>The dials show where each wing is in its beat. The dragonfly can also beat the left and right wings differently, which is how it turns.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Phase between the pairs</h2>
+        <p>The delay between the hindwings and the forewings is the <dfn data-part="phase">phase difference</dfn>, measured in degrees of one beat. The hindwings usually lead.</p>
+        <p>Hovering dragonflies often beat the pairs almost opposite, about 180&deg; apart. In fast forward flight the hindwings lead by about a quarter of a beat (90&deg;). For take-off and sharp turns the pairs beat nearly together (0&deg;).</p>
+        <p class="caption">The traces show the height of each wing tip over time. Reported values vary between species and studies.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Why the timing matters</h2>
+        <p>The forewing is ahead of the hindwing and slightly above it, so the hindwing beats in the air that the forewing has just pushed. That air is moving down and also rotating.</p>
+        <p>With the pairs beating opposite, the hindwing can take some of that <dfn data-part="swirl">swirl</dfn> out of the wake, and in models and experiments the pair then needs less power. Beating together, both wings push at the same time on still air, which gives the most force at a higher cost. Dragonflies choose between economy and power by changing the phase.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>The wing itself</h2>
+        <p>A dragonfly wing is a thin membrane stiffened by a network of veins. It is not flat: seen in cross-section it is pleated, which makes it stiff along its length while staying very light. This is <dfn data-part="corr">corrugation</dfn>.</p>
+        <p>The <dfn data-part="nodus">nodus</dfn>, a joint halfway along the leading edge, lets the outer wing twist a little under load. Near the tip, a thickened, heavier cell, the <dfn data-part="pterostigma">pterostigma</dfn>, adds weight at the leading edge. It helps set the wing's twist and keeps the tip from fluttering at high speed.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>Summary</h2>
+        <ul>
+          <li>A wing moving through air feels lift and drag. A steady wing stalls past about 15&deg;.</li>
+          <li>Flapping wings sweep back and forth and flip at each end, so both half-strokes push air down.</li>
+          <li>A leading-edge vortex delays the stall, so flapping wings work at steep angles.</li>
+          <li>A hovering dragonfly tilts its stroke and pushes hard on the downstroke; much of the upward force is drag.</li>
+          <li>Direct muscles drive each of the four wings separately. Changing the phase between the pairs trades economy for power.</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <div class="after">
+    <div class="note">
+      <h3>Planned expansion</h3>
+      <ul>
+        <li><b>Turning and backward flight.</b> Different strokes on the left and right, and a reversed stroke plane.</li>
+        <li><b>Gliding.</b> Why corrugated wings glide well at low speed.</li>
+        <li><b>Catching prey.</b> Interception flight: steering towards where the prey is going.</li>
+        <li><b>Flies and bees.</b> Indirect flight muscles and asynchronous muscle, which beat several times per nerve impulse.</li>
+        <li><b>Interactive.</b> Sliders for phase, stroke-plane tilt and angles of attack, showing the net force.</li>
+      </ul>
+    </div>
+    <p class="caption">Diagrams are simplified. Wing motion is slowed down about thirty times. The wing section is drawn as a flat plate, the forces come from a simple quasi-steady model and are not to scale, the wake drawings are schematic, and the thorax section shows one muscle of each kind per wing.</p>
+    <section class="reading">
+      <h3>Further reading</h3>
+      <ul>
+        <li><a href="https://en.wikipedia.org/wiki/Dragonfly">Dragonfly</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Odonata">Odonata</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Insect_flight">Insect flight</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Insect_wing">Insect wing</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Pterostigma">Pterostigma</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Lift_(force)">Lift (force)</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Drag_(physics)">Drag (physics)</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Angle_of_attack">Angle of attack</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Stall_(fluid_dynamics)">Stall (fluid dynamics)</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Downwash">Downwash</a><span class="src">Wikipedia</span></li>
+        <li><a href="https://en.wikipedia.org/wiki/Hummingbird">Hummingbird</a><span class="src">Wikipedia</span></li>
+      </ul>
+    </section>
+    <section class="references">
+      <h3>References</h3>
+      <ol>
+        <li>Wang ZJ. The role of drag in insect hovering. <cite>Journal of Experimental Biology</cite>. 2004;207(23):4147&ndash;4155. Tilted stroke plane, force coefficients, share of weight carried by drag.</li>
+        <li>Wang ZJ, Russell D. Effect of forewing and hindwing interactions on aerodynamic forces and power in hovering dragonfly flight. <cite>Physical Review Letters</cite>. 2007;99(14):148101.</li>
+        <li>Usherwood JR, Lehmann FO. Phasing of dragonfly wings can improve aerodynamic efficiency by removing swirl. <cite>Journal of the Royal Society Interface</cite>. 2008;5(28):1303&ndash;1307.</li>
+        <li>Alexander DE. Unusual phase relationships between the forewings and hindwings in flying dragonflies. <cite>Journal of Experimental Biology</cite>. 1984;109:379&ndash;383.</li>
+        <li>Norberg RÅ. Hovering flight of the dragonfly <i>Aeschna juncea</i> L., kinematics and aerodynamics. In: Wu TY, Brokaw CJ, Brennen C, editors. <cite>Swimming and Flying in Nature</cite>. Vol. 2. New York: Plenum; 1975. p. 763&ndash;781.</li>
+        <li>Thomas ALR, Taylor GK, Srygley RB, Nudds RL, Bomphrey RJ. Dragonfly flight: free-flight and tethered flow visualizations reveal a diverse array of unsteady lift-generating mechanisms, controlled primarily via angle of attack. <cite>Journal of Experimental Biology</cite>. 2004;207(24):4299&ndash;4323.</li>
+        <li>Ellington CP, van den Berg C, Willmott AP, Thomas ALR. Leading-edge vortices in insect flight. <cite>Nature</cite>. 1996;384:626&ndash;630.</li>
+        <li>Dickinson MH, Lehmann FO, Sane SP. Wing rotation and the aerodynamic basis of insect flight. <cite>Science</cite>. 1999;284(5422):1954&ndash;1960.</li>
+        <li>Norberg RÅ. The pterostigma of insect wings an inertial regulator of wing pitch. <cite>Journal of Comparative Physiology</cite>. 1972;81:9&ndash;22.</li>
+        <li>Rees CJC. Form and function in corrugated insect wings. <cite>Nature</cite>. 1975;256:200&ndash;203.</li>
+      </ol>
+    </section>
+  </div>
+
+  <script src="../../shared/explainer.js"></script>
+  <script src="dragonfly.js"></script>
+  <script src="scenes.js"></script>
+</body>
+</html>

@@ -56,15 +56,19 @@
 
       <!-- Colour key; each entry lists the steps where it applies -->
       <div class="legend" id="legend">
-        <span data-steps="0,2-4,6,13"><i class="sw sw-phob"></i>Water-avoiding (hydrophobic)</span>
-        <span data-steps="0,2-4,6,13"><i class="sw sw-phil"></i>Water-loving (hydrophilic)</span>
+        <span data-steps="0,2-4,6,15"><i class="sw sw-phob"></i>Water-avoiding (hydrophobic)</span>
+        <span data-steps="0,2-4,6,15"><i class="sw sw-phil"></i>Water-loving (hydrophilic)</span>
         <span data-steps="2-3"><i class="sw sw-water"></i>Water</span>
-        <span data-steps="5,9-12"><i class="sw sw-helix"></i>Helix</span>
-        <span data-steps="5,9-12"><i class="sw sw-strand"></i>Sheet strand</span>
+        <span data-steps="5,9-11,14"><i class="sw sw-helix"></i>Helix</span>
+        <span data-steps="5,9-11,14"><i class="sw sw-strand"></i>Sheet strand</span>
         <span data-steps="9"><i class="sw sw-partner"></i>Natural partner</span>
-        <span data-steps="0,10,12,13"><i class="sw sw-drug"></i>Drug</span>
+        <span data-steps="0,10,14,15"><i class="sw sw-drug"></i>Drug</span>
         <span data-steps="7-8"><i class="sw sw-ball"></i>Folding chain</span>
         <span data-steps="7-8"><i class="sw sw-ground"></i>Energy landscape</span>
+        <span data-steps="12"><i class="sw sw-measured"></i>Measured by experiment</span>
+        <span data-steps="12"><i class="sw sw-predicted"></i>Predicted by AlphaFold</span>
+        <span data-steps="13"><i class="sw sw-early"></i>Structure prediction helps</span>
+        <span data-steps="13"><i class="sw sw-late"></i>Needs tests in cells, animals, people</span>
       </div>
     </div>
 
@@ -168,8 +172,24 @@
       <section data-step class="step">
         <h2>Predicting structures</h2>
         <p>Protein shapes are measured with X-ray crystallography, nuclear magnetic resonance or cryo-electron microscopy. A single structure can take months or years to solve, and many proteins have never been measured.</p>
-        <p>In 2020 the program <dfn>AlphaFold 2</dfn>, from Google DeepMind, predicted structures from the sequence alone, often close to the accuracy of experiments. More than 200 million predicted structures are now freely available. Demis Hassabis and John Jumper shared the 2024 Nobel Prize in Chemistry for this work, with David Baker for protein design.</p>
+        <p>In 2020 the program <dfn>AlphaFold 2</dfn>, from Google DeepMind, predicted structures from the sequence alone, often close to the accuracy of experiments, at the CASP14 prediction competition.</p>
         <p>Predictions are less reliable for flexible parts of a protein, and a predicted shape does not show whether a drug will work. They are used as a starting point for experiments, not as a replacement.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>AlphaFold's effect on science</h2>
+        <p>In 2021 Google DeepMind and the European Bioinformatics Institute (EMBL-EBI) opened the <dfn>AlphaFold Protein Structure Database</dfn>. In 2022 it was extended to almost every protein catalogued by science: more than 214 million predicted structures, free to use. The <dfn data-part="pdb">Protein Data Bank</dfn>, which has collected measured structures since 1971, holds about 250,000.</p>
+        <p>A researcher can now look up the likely shape of a protein in seconds instead of starting an experiment. Predicted models also help experiments: they have been fitted into cryo-electron microscopy maps to solve very large assemblies, such as the nuclear pore complex. DeepMind reports more than 2 million users in over 190 countries.</p>
+        <p>AlphaFold 3 (2024) extends prediction to complexes of proteins with DNA, RNA and small drug-like molecules. Demis Hassabis and John Jumper shared the 2024 Nobel Prize in Chemistry for AlphaFold, with David Baker for protein design.</p>
+        <p class="caption">Each square stands for 250,000 structures. AlphaFold learned from the measured structures in the Protein Data Bank, so the predictions depend on decades of experiments.</p>
+      </section>
+
+      <section data-step class="step">
+        <h2>AlphaFold and future medicines</h2>
+        <p>A new medicine usually takes 10 to 15 years to develop and passes through several stages. Structure prediction helps mainly in the <dfn data-part="early">early stages</dfn>: choosing a target protein, finding molecules that bind it, and improving them. In a 2024 study, molecules found by screening against AlphaFold models of two receptors worked in laboratory tests about as often as those found using measured structures.</p>
+        <p>The <dfn data-part="late">later stages</dfn> test safety and effect in cells, animals and people. Shape alone cannot predict these results, and about 9 in 10 candidates that enter clinical trials fail.</p>
+        <p>As of late 2026, no approved medicine has been discovered mainly with AlphaFold. Isomorphic Labs, a company founded by Alphabet in 2021 to apply it to drug design, had candidates in preclinical development and aimed to begin human trials around the end of 2026.</p>
+        <p>Predicted structures are becoming a standard starting point in drug discovery, in the way genome databases already are. Whether they shorten the time to a new medicine will only be known once the first candidates finish clinical trials.</p>
       </section>
 
       <section data-step class="step">

@@ -18,8 +18,12 @@
  *                   pocket closes slightly, activity lamp turns on
  *  10 Drug design   zoom on the pocket; three candidates try to fit
  *  11 Prediction    sequence -> prediction -> outline laid over the measured fold
- *  12 Other uses    three panels: corrector, stabilizer, protein medicines
- *  13 Summary       hero loop again, with the current stage named
+ *  12 AlphaFold     protein shrinks into one square; 855 outlined squares
+ *                   (predicted structures) fill in beside it
+ *  13 Medicines     the grid shrinks into the first stage of the drug
+ *                   discovery pipeline; brackets show where prediction helps
+ *  14 Other uses    three panels: corrector, stabilizer, protein medicines
+ *  15 Summary       hero loop again, with the current stage named
  */
 (function () {
   "use strict";
@@ -325,6 +329,73 @@
   var summaryText = T(svg, 500, 470, "", "cap", "middle");
   var STAGES = ["Unfolded chain", "Hydrophobic collapse", "Helices and sheets form", "Native fold", "Drug bound in the pocket"];
 
+
+  /* =====================================================================
+   * Step 12: measured vs predicted structures (one square = 250,000)
+   * ===================================================================== */
+
+  var GRID_X = 70, GRID_Y = 140, PITCH = 13, CELL = 11, COLS = 40, CELLS = 856;
+  var GRID_C = [GRID_X + COLS * PITCH / 2, GRID_Y + 22 * PITCH / 2];
+  var CELL0 = [GRID_X + CELL / 2, GRID_Y + CELL / 2];
+  var gridG = G(svg);
+  var gridClip = el("clipPath", { id: "clip-grid" }, defs);
+  var gridClipRect = el("rect", { x: GRID_X - 6, y: GRID_Y - 2, width: COLS * PITCH + 12, height: 0 }, gridClip);
+  var cellsD = "";
+  for (j = 1; j < CELLS; j++) {
+    cellsD += "M" + (GRID_X + (j % COLS) * PITCH + 0.75) + " " + (GRID_Y + Math.floor(j / COLS) * PITCH + 0.75) + " h9.5 v9.5 h-9.5 Z ";
+  }
+  var predCells = G(gridG, { "clip-path": "url(#clip-grid)" });
+  el("title", {}, predCells).textContent = "Predicted by AlphaFold: about 214 million structures";
+  el("path", { d: cellsD, fill: "rgba(214,164,78,0.06)", stroke: "#d6a44e", "stroke-width": 1.5 }, predCells);
+  var pdbCell = el("rect", { x: GRID_X, y: GRID_Y, width: CELL, height: CELL, rx: 2, fill: "#8fb3d4", class: "part-pdb" }, gridG);
+  el("title", {}, pdbCell).textContent = "Measured by experiment: about 250,000 structures";
+  var gridLblTop = G(gridG);
+  lead(gridLblTop, CELL0[0], 112, CELL0[0], GRID_Y - 2);
+  T(gridLblTop, GRID_X - 2, 104, "Measured by experiment (Protein Data Bank, since 1971): about 250,000", "small");
+  var gridLblRight = G(gridG);
+  T(gridLblRight, 615, 200, "About 860 times as many", "accent");
+  T(gridLblRight, 615, 226, "Predicted by AlphaFold", "small");
+  T(gridLblRight, 615, 246, "(database, 2022): about 214 million", "small");
+  T(gridLblRight, 615, 300, "More than 2 million users", "small");
+  T(gridLblRight, 615, 320, "in over 190 countries (DeepMind figures)", "small");
+  T(gridLblRight, 615, 360, "Nobel Prize in Chemistry, 2024", "small");
+  T(gridLblTop, GRID_X - 2, 452, "Each square: 250,000 structures", "cap");
+
+  /* =====================================================================
+   * Step 13: where prediction helps in making a medicine
+   * ===================================================================== */
+
+  var pipeG = G(svg);
+  var STAGE_NAMES = [["Choose a", "target"], ["Find", "hits"], ["Improve", "leads"],
+                     ["Preclinical", "tests"], ["Clinical", "trials"], ["Approval", ""]];
+  var BOX_X = function (i) { return 65 + i * 148; };
+  var stageBoxes = STAGE_NAMES.map(function (nm, i) {
+    var early = i < 3;
+    var g = G(pipeG, { class: early ? "part-early" : "part-late" });
+    el("rect", { x: BOX_X(i), y: 230, width: 130, height: 64, rx: 8,
+      fill: early ? "rgba(214,164,78,0.22)" : "rgba(143,179,212,0.1)", stroke: early ? "#d6a44e" : "#7d8896", "stroke-width": 1.5 }, g);
+    T(g, BOX_X(i) + 65, nm[1] ? 257 : 267, nm[0], "small", "middle");
+    if (nm[1]) T(g, BOX_X(i) + 65, 277, nm[1], "small", "middle");
+    if (i < 5) el("path", { d: "M" + (BOX_X(i) + 135) + " 254 l8 8 l-8 8", class: "lead" }, g);
+    return g;
+  });
+  var pipeEarly = G(pipeG, { class: "part-early" });
+  el("path", { d: "M65 216 V204 H455 V216", fill: "none", stroke: ACCENT, "stroke-width": 2, filter: "url(#glow)" }, pipeEarly);
+  T(pipeEarly, 260, 192, "Structure prediction used", "accent", "middle");
+  var pipeLate = G(pipeG, { class: "part-late" });
+  el("path", { d: "M509 308 V320 H935 V308", class: "lead" }, pipeLate);
+  T(pipeLate, 722, 342, "Tested in cells, animals and people;", "small", "middle");
+  T(pipeLate, 722, 362, "about 9 in 10 candidates fail in trials", "small", "middle");
+  var pipeMark = G(pipeG);
+  lead(pipeMark, 574, 168, 574, 222);
+  el("circle", { cx: 574, cy: 224, r: 6, fill: "url(#g-drug)", stroke: "#7d7458" }, pipeMark);
+  T(pipeMark, 584, 152, "First candidates from AlphaFold-era", "small");
+  T(pipeMark, 584, 170, "drug design: preclinical (late 2026)", "small");
+  var pipeTime = G(pipeG);
+  el("path", { d: "M65 404 H935 M923 398 L935 404 L923 410", class: "lead" }, pipeTime);
+  T(pipeTime, 500, 428, "About 10 to 15 years from target to approved medicine", "cap", "middle");
+  T(pipeTime, 500, 466, "Approved medicines discovered mainly with AlphaFold: none yet (2026)", "small", "middle");
+
   /* =====================================================================
    * Water (canvas)
    * ===================================================================== */
@@ -370,13 +441,13 @@
     [270, 70, 460, 400], [60, 60, 880, 440], [60, 60, 880, 440], [180, 60, 640, 420],
     [350, 165, 300, 260], [270, 80, 520, 380], [170, 60, 660, 430],
     [40, 15, 930, 530], [40, 15, 930, 530], [290, 60, 460, 400], [340, 40, 400, 330],
-    [30, 20, 940, 520], [30, 70, 940, 430], [270, 70, 460, 400]
+    [30, 20, 940, 520], [40, 60, 920, 440], [40, 120, 920, 380], [30, 70, 940, 430], [270, 70, 460, 400]
   ];
   var BOX_NARROW = [
     [300, 80, 400, 380], [90, 150, 820, 300], [90, 150, 820, 300], [250, 90, 500, 400],
     [370, 170, 250, 250], [330, 90, 360, 340], [230, 80, 460, 400],
     [60, 20, 700, 500], [370, 90, 600, 420], [330, 90, 360, 330], [350, 60, 360, 330],
-    [30, 20, 940, 520], [30, 70, 940, 430], [300, 80, 400, 380]
+    [30, 20, 940, 520], [40, 60, 920, 440], [40, 120, 920, 380], [30, 70, 940, 430], [300, 80, 400, 380]
   ];
   function keysFor(boxes) {
     var keys = [[0, boxes[0]]];
@@ -424,7 +495,7 @@
 
   function render(t, dt, info) {
     // ----- time-driven parts: the hero loop and the water -----
-    var looping = Math.max(1 - range(t, 0.3, 0.8), range(t, 12.9, 13.2));
+    var looping = Math.max(1 - range(t, 0.3, 0.8), range(t, 14.9, 15.2));
     if (!info.reduceMotion) {
       if (looping > 0.01) heroPhase = (heroPhase + dt / 9) % 1;
       clock += dt;
@@ -441,7 +512,7 @@
     svg.style.setProperty("--z", ((info.narrow ? 0.85 : 1) / scale).toFixed(3));
 
     // ----- legend -----
-    var step = clamp(Math.floor(t + 0.15), 0, 13);
+    var step = clamp(Math.floor(t + 0.15), 0, 15);
     if (step !== legendStep) {
       legendItems.forEach(function (it) { it.span.classList.toggle("on", !!it.steps[step]); });
       legendStep = step;
@@ -459,8 +530,8 @@
     else if (t < 6.3) P = M.mix(M.NAT, M.COIL, ease(range(t, 5.85, 6.25)));
     else if (t < 6.85) P = M.mix(M.COIL, M.NAT, ease(range(t, 6.3, 6.7)));
     else if (t < 8.85) P = M.mix(M.NAT, M.COIL, ease(range(t, 6.85, 7.05)));
-    else if (t < 12.85) P = fitted(M.NAT, fit);
-    else P = M.mix(M.NAT, heroP, ease(range(t, 12.85, 13.15)));
+    else if (t < 14.85) P = fitted(M.NAT, fit);
+    else P = M.mix(M.NAT, heroP, ease(range(t, 14.85, 15.15)));
 
     // Water keeps the loose chain moving (steps 2 and 3).
     var jig = 3 * win(t, 1.85, 2.1, 3.6, 3.85);
@@ -475,8 +546,8 @@
     if (t < 5.85) cart = ease(range(t, 4.45, 4.9));
     else if (t < 6.85) cart = clamp(1 - range(t, 5.85, 5.95) + range(t, 6.62, 6.75));
     else if (t < 8.85) cart = 1 - range(t, 6.85, 6.92);
-    else if (t < 12.85) cart = 1;
-    else cart = 1 - range(t, 12.85, 12.95);
+    else if (t < 14.85) cart = 1;
+    else cart = 1 - range(t, 14.85, 14.95);
     var beadVis = 1 - cart;
 
     // ----- bead colours -----
@@ -513,15 +584,17 @@
       var pOut = ease(range(t, 8.85, 9.05)), b2 = ballAt(FX, 24);
       X = lerp(b2[0], 500, pOut); Y = lerp(b2[1], 265, pOut); S = lerp(0.075, 1, pOut);
     }
-    var sep = 26 * ease(range(t, 11.95, 12.12)) * (1 - ease(range(t, 12.3, 12.45)));
-    var shake = jitter(t, 12.12, 12.25, 2);
-    var m11 = ease(range(t, 10.85, 11.1)) * (1 - ease(range(t, 11.85, 12.05)));
-    var m12 = ease(range(t, 11.85, 12.05)) * (1 - ease(range(t, 12.85, 13.05)));
+    var sep = 26 * ease(range(t, 13.95, 14.12)) * (1 - ease(range(t, 14.3, 14.45)));
+    var shake = jitter(t, 14.12, 14.25, 2);
+    var m11 = ease(range(t, 10.85, 11.1)) * (1 - ease(range(t, 13.85, 14.05)));
+    var m12 = ease(range(t, 13.85, 14.05)) * (1 - ease(range(t, 14.85, 15.05)));
     X += (700 - 500) * m11 + (460 - sep / 2 - shake - 500) * m12;
     Y += (330 - 265) * m11 + (285 - 265) * m12;
     S += (0.95 - 1) * m11 + (0.36 - 1) * m12;
+    var g12 = ease(range(t, 11.85, 12.1)) * (t < 13.85 ? 1 : 0);
+    X = lerp(X, CELL0[0], g12); Y = lerp(Y, CELL0[1], g12); S = lerp(S, 0.043, g12);
     pg.setAttribute("transform", "translate(" + X.toFixed(2) + " " + Y.toFixed(2) + ") scale(" + S.toFixed(4) + ") translate(-500 -265)");
-    show(pg, t < 8.85 ? 1 - range(t, 7.0, 7.08) : range(t, 8.85, 8.9));
+    show(pg, (t < 8.85 ? 1 - range(t, 7.0, 7.08) : range(t, 8.85, 8.9)) * (1 - win(t, 12.02, 12.1, 13.85, 13.95)));
 
     // ----- step 1: ribosome -----
     var synth = win(t, 0.85, 1.0, 1.85, 2.0);
@@ -608,9 +681,9 @@
     outline(drugB.body, BAD, win(t, 10.34, 10.36, 10.4, 10.42));
 
     var cy, cop;
-    if (t < 1 || t > 12.85) {
+    if (t < 1 || t > 14.85) {
       cy = SEAT - (1 - hp.drug) * 170;
-      cop = Math.min(1, hp.drug * 3) * (t < 1 ? 1 - range(t, 0.3, 0.6) : range(t, 13.0, 13.15));
+      cop = Math.min(1, hp.drug * 3) * (t < 1 ? 1 - range(t, 0.3, 0.6) : range(t, 15.0, 15.15));
     } else {
       cy = SEAT - (1 - E.easeOutBack(range(t, 10.44, 10.56), 0.6)) * 190;
       cop = range(t, 10.42, 10.46) * (1 - range(t, 10.85, 10.95));
@@ -621,8 +694,32 @@
 
     // ----- step 11: prediction -----
     show(expG, win(t, 10.95, 11.15, 11.85, 11.95));
-    show(predG, range(t, 11.1, 11.2) * (1 - range(t, 11.85, 11.95)));
+    show(predG, range(t, 11.1, 11.2) * (1 - range(t, 12.0, 12.1)));
     predG.setAttribute("transform", "translate(0 " + (-(1 - ease(range(t, 11.15, 11.45))) * 140).toFixed(1) + ")");
+
+    // ----- step 12: structure grid -----
+    var gv = range(t, 11.9, 12.0) * (1 - range(t, 13.02, 13.1));
+    show(gridG, gv);
+    if (gv > 0.001) {
+      pdbCell.style.opacity = range(t, 12.0, 12.08);
+      gridClipRect.setAttribute("height", (22 * PITCH + 4) * ease(range(t, 12.15, 12.6)));
+      gridLblTop.style.opacity = range(t, 12.05, 12.15) * (1 - range(t, 12.85, 12.95));
+      gridLblRight.style.opacity = range(t, 12.5, 12.65) * (1 - range(t, 12.85, 12.95));
+      var gm = ease(range(t, 12.85, 13.1));
+      gridG.setAttribute("transform", "translate(" + lerp(GRID_C[0], 130, gm).toFixed(1) + " " + lerp(GRID_C[1], 262, gm).toFixed(1) +
+        ") scale(" + lerp(1, 0.2, gm).toFixed(3) + ") translate(" + -GRID_C[0] + " " + -GRID_C[1] + ")");
+    }
+
+    // ----- step 13: drug discovery pipeline -----
+    var pv = range(t, 12.95, 13.05) * (1 - range(t, 13.85, 13.95));
+    show(pipeG, pv);
+    if (pv > 0.001) {
+      stageBoxes.forEach(function (b, i) { b.style.opacity = range(t, 12.98 + i * 0.05, 13.08 + i * 0.05); });
+      pipeEarly.style.opacity = range(t, 13.3, 13.4);
+      pipeLate.style.opacity = range(t, 13.38, 13.48);
+      pipeMark.style.opacity = range(t, 13.45, 13.55);
+      pipeTime.style.opacity = range(t, 13.5, 13.6);
+    }
 
     // ----- steps 7 and 8: funnel -----
     var fun = range(t, 6.9, 7.05) * (1 - range(t, 8.85, 9.0));
@@ -662,34 +759,34 @@
     translate(chap, c2[0], c2[1] - (1 - chIn) * 120 - chOut * 120);
 
     // ----- step 12: panels -----
-    var tiles = win(t, 11.85, 12.0, 12.85, 12.95);
+    var tiles = win(t, 13.85, 14.0, 14.85, 14.95);
     show(tilesBack, tiles);
-    show(tBDrug, tiles * range(t, 12.12, 12.17));
+    show(tBDrug, tiles * range(t, 14.12, 14.17));
     if (tiles > 0.001) {
       // A: corrector
-      var pA = ease(range(t, 12.12, 12.45)), r40 = 40;
+      var pA = ease(range(t, 14.12, 14.45)), r40 = 40;
       var ax2 = lerp(XPIT, FX, pA);
       var ca = ballAt(ax2, r40);
       ca[1] -= 60 * Math.sin(Math.PI * pA);
       tABall.setAttribute("cx", ca[0]); tABall.setAttribute("cy", ca[1]);
-      tABall.setAttribute("stroke", t < 12.1 ? BAD : "#cfa651");
-      var dIn = ease(range(t, 11.95, 12.1));
+      tABall.setAttribute("stroke", t < 14.1 ? BAD : "#cfa651");
+      var dIn = ease(range(t, 13.95, 14.1));
       translate(tADrug, ca[0], ca[1] - r40 - 26 - (1 - dIn) * 160);
-      tADrug.style.opacity = range(t, 11.95, 12.0);
+      tADrug.style.opacity = range(t, 13.95, 14.0);
       // B: stabilizer copy and drug
       var cs = 0.36;
       tBCopy.setAttribute("transform", "translate(" + (540 + sep / 2 + shake).toFixed(2) + " 285) scale(" + -cs + " " + cs + ") translate(-500 -265)");
-      translate(tBDrug, 500, lerp(150, 300, ease(range(t, 12.15, 12.3))));
+      translate(tBDrug, 500, lerp(150, 300, ease(range(t, 14.15, 14.3))));
       // C: antibodies leave the cell
       Ys.forEach(function (y, j) {
-        var p = ease(range(t, 11.95 + j * 0.12, 12.3 + j * 0.12));
+        var p = ease(range(t, 13.95 + j * 0.12, 14.3 + j * 0.12));
         y.g.setAttribute("transform", "translate(" + lerp(830, y.end[0], p).toFixed(1) + " " + lerp(282, y.end[1], p).toFixed(1) + ") scale(" + lerp(0.3, 1, p).toFixed(3) + ")");
-        y.g.style.opacity = range(t, 11.95 + j * 0.12, 12.0 + j * 0.12);
+        y.g.style.opacity = range(t, 13.95 + j * 0.12, 14.0 + j * 0.12);
       });
     }
 
     // ----- summary -----
-    show(summaryText, range(t, 13.05, 13.2));
+    show(summaryText, range(t, 15.05, 15.2));
     summaryText.textContent = STAGES[hp.stage];
   }
 

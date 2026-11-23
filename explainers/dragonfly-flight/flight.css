@@ -1,0 +1,63 @@
+/* Styles specific to the dragonfly flight explainer. */
+
+.drawing {
+  position: absolute;
+  inset: 3% 3%;
+  width: 94%;
+  height: 94%;
+  overflow: visible;
+}
+
+.drawing text {
+  fill: var(--text);
+  font-family: var(--sans);
+  font-size: 17px;
+}
+.drawing text.small { font-size: 13px; fill: #c7ced6; }
+.drawing text.cap { fill: var(--muted); font-size: 15px; }
+.drawing text.accent { fill: var(--accent); }
+.drawing text.ok { fill: var(--ok); }
+.drawing text.bad { fill: var(--bad); }
+.drawing .lead {
+  stroke: var(--muted);
+  stroke-width: 1;
+  fill: none;
+}
+.drawing .axis {
+  stroke: #9aa4af;
+  stroke-width: 1.2;
+  fill: none;
+}
+.drawing .frame {
+  fill: rgba(0, 0, 0, 0.16);
+  stroke: rgba(255, 255, 255, 0.12);
+}
+
+/* Parts named in hovered text glow */
+.drawing .is-lit { filter: url(#glow-lit); }
+
+/* ---------- Colour key ---------- */
+
+.legend {
+  position: absolute;
+  left: 4%;
+  bottom: 4%;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 92%;
+  gap: 0.4rem 1.2rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.legend span { display: none; align-items: center; gap: 0.45rem; }
+.legend span.on { display: flex; }
+.legend .sw { width: 14px; height: 14px; border-radius: 3px; }
+.sw-wing { background: linear-gradient(180deg, #ecc86d, #a87f2a); }
+.sw-body { background: linear-gradient(180deg, #8e99a5, #5b6572); }
+.sw-air { background: #e6dcb6; border-radius: 50% !important; width: 8px !important; height: 8px !important; margin: 3px; }
+.sw-muscle { background: linear-gradient(180deg, #e09a7c, #8f4a39); }
+.sw-force { background: #e2b955; height: 4px !important; margin: 5px 0; box-shadow: 0 0 6px #e2b955; }
+
+@media (max-width: 800px) {
+  .legend { bottom: 2.8rem; font-size: 0.7rem; gap: 0.3rem 0.8rem; }
+}

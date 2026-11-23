@@ -69,6 +69,10 @@
 .sw-partner { background: linear-gradient(180deg, #d9c9ee, #9c86bd); }
 .sw-drug { background: linear-gradient(180deg, #efe6c4, #b9ad84); }
 .sw-ball { background: #262c33; border: 2px solid #cfa651; border-radius: 50% !important; }
+.sw-measured { background: #8fb3d4; }
+.sw-predicted { border: 1.5px solid #d6a44e; }
+.sw-early { background: rgba(214, 164, 78, 0.35); border: 1.5px solid #d6a44e; }
+.sw-late { background: rgba(143, 179, 212, 0.18); border: 1.5px solid #7d8896; }
 .sw-ground { background: linear-gradient(180deg, #7d8896, #4c5560); }
 
 @media (max-width: 800px) {
